@@ -22,6 +22,7 @@ class User extends Authenticatable
         'role',
         'status',
         'sex',
+        'gender',
         'house_number',
         'zone_purok',
         'barangay',

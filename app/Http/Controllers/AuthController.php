@@ -81,15 +81,22 @@ class AuthController extends Controller
             'last_name' => 'required|string|max:100',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6|confirmed',
-            'password_confirmation' => 'required',
+            'password_confirmation' => 'required|min:6',
             'sex' => 'required|in:male,female',
             'state' => 'required|string|max:100',
             'city' => 'required|string|max:100',
+            'barangay' => 'required|string|max:100',
+            'terms' => 'required|accepted',
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:255',
             'house_number' => 'nullable|string|max:50',
-            'zone_purok' => 'nullable|string|max:100',
-            'barangay' => 'nullable|string|max:100'
+            'zone_purok' => 'nullable|string|max:100'
+        ], [
+            'password.confirmed' => 'The password confirmation does not match.',
+            'password_confirmation.required' => 'Please confirm your password.',
+            'barangay.required' => 'Please select a barangay.',
+            'terms.required' => 'You must accept the Terms of Service and Privacy Policy.',
+            'terms.accepted' => 'You must accept the Terms of Service and Privacy Policy.'
         ]);
 
         if ($validator->fails()) {
@@ -106,7 +113,7 @@ class AuthController extends Controller
                 'password' => Hash::make($validated['password']),
                 'role' => 'farmer', // Default role for all public registrations
                 'status' => 'active',
-                'sex' => $validated['sex'],
+                'gender' => $validated['sex'],
                 'phone' => $validated['phone'] ?? null,
                 'house_number' => $validated['house_number'] ?? null,
                 'zone_purok' => $validated['zone_purok'] ?? null,

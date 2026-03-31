@@ -81,9 +81,9 @@
             </div>
 
             <div class="flex gap-3 pt-6">
-                <a href="{{ route('admin.guides.index') }}" class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 py-3 px-4 rounded-lg text-center font-semibold transition">
+                <button type="button" onclick="history.back()" class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 py-3 px-4 rounded-lg text-center font-semibold transition">
                     <i class="fas fa-arrow-left mr-2"></i> Cancel
-                </a>
+                </button>
                 <button type="submit" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-3 px-4 rounded-lg font-semibold transition">
                     <i class="fas fa-save mr-2"></i> Update Guide
                 </button>

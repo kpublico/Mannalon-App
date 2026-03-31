@@ -128,11 +128,11 @@
                             <td class="px-4 py-3 text-gray-600">{{ $announcement->expiry_date ? $announcement->expiry_date->format('M d, Y') : 'N/A' }}</td>
                             <td class="px-4 py-3">
                                 <div class="flex justify-center gap-2">
-                                    <a href="{{ route('admin.announcements.edit', $announcement->id) }}" class="px-3 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700">Edit</a>
+                                    <button type="button" onclick="window.location.href='{{ route('admin.announcements.edit', $announcement->id) }}'" class="px-3 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700">Edit</button>
                                     <form method="POST" action="{{ route('admin.announcements.destroy', $announcement->id) }}" onsubmit="return confirm('Delete this announcement?')" style="display: inline;">
                                         @csrf
                                         @method('DELETE')
-                                        <button class="px-3 py-1 text-xs bg-red-600 text-white rounded hover:bg-red-700">Delete</button>
+                                        <button type="submit" class="px-3 py-1 text-xs bg-red-600 text-white rounded hover:bg-red-700">Delete</button>
                                     </form>
                                 </div>
                             </td>

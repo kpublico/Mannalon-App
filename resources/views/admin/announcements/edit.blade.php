@@ -42,18 +42,18 @@
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Audience Scope</label>
                         <select name="audience_scope" class="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-emerald-600" id="audience_scope" required>
                             <option value="">Select audience scope</option>
-                            <option value="all" {{ old('audience_scope', $announcement->audience_scope ?? '') == 'all' ? 'selected' : '' }}>All Farmers</option>
+                        <option value="all" {{ old('audience_scope', $announcement->audience_scope ?? 'all') == 'all' ? 'selected' : '' }}>All Farmers</option>
                             <option value="specific_group" {{ old('audience_scope', $announcement->audience_scope ?? '') == 'specific_group' ? 'selected' : '' }}>Specific Farmer Group</option>
                         </select>
                         @error('audience_scope')<span class="text-red-600 text-sm">{{ $message }}</span>@enderror
                     </div>
 
-                    <div id="target_group_container" class="mb-4" style="display: {{ old('audience_scope', $announcement->audience_scope ?? '') == 'specific_group' ? 'block' : 'none' }}">
+                    <div id="target_group_container" class="mb-4" style="display: {{ in_array(old('audience_scope', $announcement->audience_scope ?? ''), ['specific_group']) ? 'block' : 'none' }}">
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Target Group</label>
                         <select name="target_group_id" class="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-emerald-600">
                             <option value="">Select a farmer group</option>
                             @forelse($groups as $group)
-                                <option value="{{ $group->id }}" {{ old('target_group_id', $announcement->target_group_id ?? '') == $group->id ? 'selected' : '' }}>{{ $group->group_name }} ({{ $group->region }})</option>
+                                <option value="{{ $group->id }}" {{ old('target_group_id', $announcement->target_group_id ?? '') == $group->id ? 'selected' : '' }}>{{ $group->group_name }} ({{ $group->region ?? 'N/A' }}) </option>
                             @empty
                                 <option value="">No farmer groups available</option>
                             @endforelse
@@ -94,9 +94,9 @@
                 </div>
 
                 <div class="flex gap-3 pt-6">
-                    <a href="{{ route('admin.announcements.index') }}" class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 py-3 px-4 rounded-lg text-center font-semibold transition">
+                    <button type="button" onclick="history.back()" class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 py-3 px-4 rounded-lg text-center font-semibold transition">
                         Cancel
-                    </a>
+                    </button>
                     <button type="submit" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-3 px-4 rounded-lg font-semibold transition">
                         Update Announcement
                     </button>
@@ -107,12 +107,27 @@
 </div>
 
 <script>
-document.getElementById('audience_scope').addEventListener('change', function() {
-    const targetGroupContainer = document.getElementById('target_group_container');
-    if (this.value === 'specific_group') {
-        targetGroupContainer.style.display = 'block';
-    } else {
-        targetGroupContainer.style.display = 'none';
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle audience scope toggle
+    const audienceScope = document.getElementById('audience_scope');
+    if (audienceScope) {
+        audienceScope.addEventListener('change', function() {
+            const targetGroupContainer = document.getElementById('target_group_container');
+            if (this.value === 'specific_group') {
+                targetGroupContainer.style.display = 'block';
+            } else {
+                targetGroupContainer.style.display = 'none';
+            }
+        });
+    }
+    
+    // Handle form submission
+    const form = document.querySelector('form');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            // Log for debugging
+            console.log('Form submitting to:', this.action);
+        });
     }
 });
 </script>

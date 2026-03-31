@@ -42,6 +42,7 @@
                             <th class="px-4 py-2 text-left text-xs font-semibold text-gray-700">Contact</th>
                             <th class="px-4 py-2 text-left text-xs font-semibold text-gray-700">Status</th>
                             <th class="px-4 py-2 text-left text-xs font-semibold text-gray-700">Joined</th>
+                            <th class="px-4 py-2 text-left text-xs font-semibold text-gray-700">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
@@ -58,10 +59,14 @@
                                     @endif
                                 </td>
                                 <td class="px-4 py-3 text-sm text-gray-500">{{ $farmer->created_at?->format('M d, Y') }}</td>
+                                <td class="px-4 py-3 text-sm space-x-2 flex gap-2">
+                                    <button onclick="loadAdminPage('farmer-detail', '{{ route('admin.farmers.show', $farmer->id) }}')" class="px-3 py-1 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition font-semibold text-xs" title="View Details"><i class="fas fa-eye mr-1"></i>View</button>
+                                    <button onclick="verifyFarmer({{ $farmer->id }})" class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-md hover:bg-emerald-200 transition font-semibold text-xs" title="Verify Farmer"><i class="fas fa-check mr-1"></i>Verify</button>
+                                </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="px-4 py-8 text-center text-gray-500"><i class="fas fa-inbox mr-2"></i>No farmer registrations yet.</td>
+                                <td colspan="6" class="px-4 py-8 text-center text-gray-500"><i class="fas fa-inbox mr-2"></i>No farmer registrations yet.</td>
                             </tr>
                         @endforelse
                     </tbody>

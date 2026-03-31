@@ -761,7 +761,7 @@ class AdminController extends Controller
 
         $announcement->update($validated);
 
-        return back()->with('success', 'Announcement updated successfully!');
+        return redirect()->route('admin.announcements.index')->with('success', 'Announcement updated successfully!');
     }
 
     /**
@@ -771,7 +771,7 @@ class AdminController extends Controller
     {
         Announcement::findOrFail($id)->delete();
 
-        return back()->with('success', 'Announcement deleted successfully!');
+        return redirect()->route('admin.announcements.index')->with('success', 'Announcement deleted successfully!');
     }
 
     /**
@@ -928,9 +928,16 @@ class AdminController extends Controller
      */
     public function guidesDestroy($id)
     {
-        FarmingGuide::findOrFail($id)->delete();
+        $guide = FarmingGuide::findOrFail($id);
+        
+        // Delete PDF file if it exists
+        if ($guide->pdf_file && \Storage::disk('public')->exists($guide->pdf_file)) {
+            \Storage::disk('public')->delete($guide->pdf_file);
+        }
+        
+        $guide->delete();
 
-        return back()->with('success', 'Guide deleted successfully!');
+        return redirect()->route('admin.guides.index')->with('success', 'Guide deleted successfully!');
     }
 
     /**

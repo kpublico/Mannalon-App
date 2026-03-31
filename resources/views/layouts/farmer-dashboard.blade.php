@@ -158,10 +158,10 @@
                         <li>☁️ Weather preparation tips</li>
                         <li>📈 Market trends & pricing</li>
                         <li>🐛 Pest control solutions</li>
-                        <li>💧 Irrigation techniques</li>
+                        <li>🧭 Navigate MannalonApp pages</li>
                     </ul>
                     <p class="text-sm text-gray-800 mt-2">
-                        How can I assist you today?
+                        Try asking: <em>"Where can I check market prices?"</em> or <em>"Show me all pages"</em>
                     </p>
                 </div>
             </div>
@@ -173,7 +173,7 @@
                 <input 
                     type="text" 
                     id="chatInput" 
-                    placeholder="Ask about farming, weather, or markets..."
+                    placeholder="Ask about farming, weather, or say 'go to...'"
                     class="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                     autocomplete="off">
                 <button 
@@ -190,6 +190,8 @@
 
     <!-- Chat JavaScript -->
     <script>
+        let chatSending = false;
+
         // Toggle Chat Window
         function toggleChat() {
             const chatWindow = document.getElementById('chatWindow');
@@ -198,6 +200,7 @@
             if (chatWindow.classList.contains('hidden')) {
                 chatWindow.classList.remove('hidden');
                 chatBtn.innerHTML = '<i class="fas fa-times text-2xl"></i>';
+                document.getElementById('chatInput').focus();
             } else {
                 chatWindow.classList.add('hidden');
                 chatBtn.innerHTML = '<i class="fas fa-comments text-2xl"></i>';
@@ -208,10 +211,14 @@
         function sendMessage(event) {
             event.preventDefault();
             
+            if (chatSending) return;
+            
             const input = document.getElementById('chatInput');
             const message = input.value.trim();
             
             if (!message) return;
+            
+            chatSending = true;
             
             // Add user message to chat
             addMessageToChat(message, 'user');
@@ -222,6 +229,9 @@
             // Show typing indicator
             showTypingIndicator();
             
+            // Disable input while waiting
+            input.disabled = true;
+            
             // Call Backend API for AI Response
             sendMessageToAPI(message)
                 .then(aiResponse => {
@@ -231,33 +241,36 @@
                 .catch(error => {
                     hideTypingIndicator();
                     addMessageToChat('I apologize, but I\'m having trouble processing your question. Please try again or contact the Municipal Agriculture Office at (078) 123-4567.', 'ai');
+                })
+                .finally(() => {
+                    chatSending = false;
+                    input.disabled = false;
+                    input.focus();
                 });
         }
 
         // API Call to Backend
         async function sendMessageToAPI(message) {
-            try {
-                const response = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({ message: message })
-                });
+            const response = await fetch('{{ route("chat.send") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ message: message })
+            });
 
-                const data = await response.json();
-                
-                if (data.success && data.reply) {
-                    return data.reply;
-                } else {
-                    throw new Error('Invalid response format');
-                }
-                
-            } catch (error) {
-                console.error('Chat API Error:', error);
-                throw error;
+            if (!response.ok) {
+                throw new Error('Server returned ' + response.status);
+            }
+
+            const data = await response.json();
+            
+            if (data.success && data.reply) {
+                return data.reply;
+            } else {
+                throw new Error(data.reply || 'Invalid response');
             }
         }
 
@@ -280,13 +293,64 @@
                         <span class="text-white">🤖</span>
                     </div>
                     <div class="bg-white rounded-lg rounded-tl-none p-3 shadow-sm max-w-[80%]">
-                        <p class="text-sm text-gray-800">${escapeHtml(message)}</p>
+                        <div class="text-sm text-gray-800 ai-response">${formatAIResponse(message)}</div>
                     </div>
                 `;
             }
             
             chatMessages.appendChild(messageDiv);
             chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Format AI response: escape HTML first, then render markdown and navigation buttons
+        function formatAIResponse(text) {
+            // 1. Extract [NAV:...] links before escaping so we can re-inject them safely
+            const navLinks = [];
+            let navIndex = 0;
+            let processed = text.replace(/\[NAV:(\/farmer\/[a-z-]+)\|([^\]]+)\]/g, function(match, path, label) {
+                const placeholder = `__NAV_${navIndex}__`;
+                navLinks.push({ path: path, label: label, placeholder: placeholder });
+                navIndex++;
+                return placeholder;
+            });
+
+            // 2. Escape HTML to prevent XSS
+            let safe = escapeHtml(processed);
+            
+            // 3. Convert **bold** to <strong>
+            safe = safe.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+            
+            // 4. Convert lines starting with "- " into list items
+            safe = safe.replace(/^- (.+)$/gm, '<li class="ml-4 list-disc">$1</li>');
+            
+            // 5. Wrap consecutive <li> items in <ul>
+            safe = safe.replace(/((?:<li[^>]*>.*?<\/li>\n?)+)/g, '<ul class="my-1 space-y-0.5">$1</ul>');
+            
+            // 6. Convert numbered lists (1. item)
+            safe = safe.replace(/^(\d+)\.\s+(.+)$/gm, '<li class="ml-4 list-decimal"><span>$2</span></li>');
+            safe = safe.replace(/((?:<li class="ml-4 list-decimal">.*?<\/li>\n?)+)/g, '<ol class="my-1 space-y-0.5">$1</ol>');
+            
+            // 7. Convert double newlines to paragraph breaks
+            safe = safe.replace(/\n\n/g, '</p><p class="mt-2">');
+            
+            // 8. Convert remaining single newlines to <br>
+            safe = safe.replace(/\n/g, '<br>');
+            
+            // 9. Wrap in paragraph
+            safe = '<p>' + safe + '</p>';
+            
+            // 10. Re-inject navigation buttons (safe — paths are validated, labels are escaped)
+            navLinks.forEach(function(nav) {
+                const safeLabel = escapeHtml(nav.label);
+                const button = `<a href="${nav.path}" class="nav-link-btn inline-flex items-center gap-2 mt-2 px-4 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer no-underline" style="text-decoration:none;">${safeLabel} <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></a>`;
+                safe = safe.replace(nav.placeholder, button);
+            });
+            
+            // Clean up empty paragraphs
+            safe = safe.replace(/<p><\/p>/g, '');
+            safe = safe.replace(/<p class="mt-2"><\/p>/g, '');
+            
+            return safe;
         }
 
         // Show Typing Indicator
@@ -325,6 +389,17 @@
             div.textContent = text;
             return div.innerHTML;
         }
+
+        // Allow Enter key to send, Shift+Enter for new line
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatInput = document.getElementById('chatInput');
+            chatInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    document.getElementById('chatForm').dispatchEvent(new Event('submit'));
+                }
+            });
+        });
     </script>
 </body>
 </html>

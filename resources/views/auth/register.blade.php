@@ -7,11 +7,21 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #f9f8f6;
             min-height: 100vh;
-            padding: 40px 20px;
+            padding: 20px;
+        }
+
+        @media (min-width: 768px) {
+            body {
+                padding: 40px 20px;
+            }
         }
 
         .form-card {
@@ -19,8 +29,14 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
             background: #ffffff;
             border-radius: 12px;
-            padding: 28px;
+            padding: 20px;
             transition: box-shadow 0.3s ease;
+        }
+
+        @media (min-width: 768px) {
+            .form-card {
+                padding: 28px;
+            }
         }
 
         .form-card:hover {
@@ -28,16 +44,29 @@
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 16px;
+        }
+
+        @media (min-width: 768px) {
+            .form-group {
+                margin-bottom: 20px;
+            }
         }
 
         .form-group label {
             display: block;
             color: #374151;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             font-weight: 600;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             letter-spacing: 0.3px;
+        }
+
+        @media (min-width: 768px) {
+            .form-group label {
+                font-size: 0.95rem;
+                margin-bottom: 8px;
+            }
         }
 
         input[type="text"],
@@ -47,6 +76,7 @@
             color: #1f2937;
             font-size: 1rem;
             font-weight: 500;
+            width: 100%;
         }
 
         input::placeholder {
@@ -56,96 +86,173 @@
 
         .password-toggle-btn {
             position: absolute;
-            right: 12px;
+            right: 10px;
             top: 50%;
             transform: translateY(-50%);
             background: none;
             border: none;
             cursor: pointer;
-            padding: 8px;
+            padding: 6px 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #9ca3af;
             transition: color 0.2s ease;
+            min-width: 44px;
+            min-height: 44px;
+            -webkit-appearance: none;
         }
 
         .password-toggle-btn:hover {
             color: #10b981;
         }
 
+        .password-toggle-btn:active {
+            color: #059669;
+        }
+
         .password-toggle-btn svg {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             stroke-width: 2;
         }
 
+        @media (min-width: 768px) {
+            .password-toggle-btn svg {
+                width: 20px;
+                height: 20px;
+            }
+        }
+
         .form-container {
-            max-width: 1100px;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 1024px) {
+            .form-container {
+                max-width: 900px;
+            }
         }
 
         .main-heading {
             text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 30px;
+        }
+
+        @media (min-width: 768px) {
+            .main-heading {
+                margin-bottom: 50px;
+            }
         }
 
         .main-heading h1 {
             color: #1f2937;
-            font-size: 2.5rem;
+            font-size: 1.75rem;
             font-weight: 800;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             letter-spacing: -0.5px;
+        }
+
+        @media (min-width: 768px) {
+            .main-heading h1 {
+                font-size: 2.5rem;
+                margin-bottom: 10px;
+            }
         }
 
         .main-heading p {
             color: #6b7280;
-            font-size: 1.1rem;
+            font-size: 0.95rem;
             font-weight: 500;
         }
 
+        @media (min-width: 768px) {
+            .main-heading p {
+                font-size: 1.1rem;
+            }
+        }
+
         .top-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 30px;
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 20px;
             background-color: #10b981;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 45px;
+            font-size: 38px;
             box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        @media (min-width: 768px) {
+            .top-icon {
+                width: 80px;
+                height: 80px;
+                margin: 0 auto 30px;
+                font-size: 45px;
+            }
         }
 
         .section-header {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 25px;
+            gap: 10px;
+            margin-bottom: 20px;
             color: #059669;
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             font-weight: 700;
             padding-bottom: 10px;
             border-bottom: 2px solid #f0fdf4;
+            flex-wrap: wrap;
+        }
+
+        @media (min-width: 768px) {
+            .section-header {
+                gap: 12px;
+                margin-bottom: 25px;
+                font-size: 1.3rem;
+            }
         }
 
         .section-header span:first-child {
-            font-size: 28px;
+            font-size: 24px;
+        }
+
+        @media (min-width: 768px) {
+            .section-header span:first-child {
+                font-size: 28px;
+            }
         }
 
         input:focus, select:focus {
             border-color: #10b981 !important;
             box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1) !important;
+            outline: none;
         }
 
         .btn-submit {
             background-color: #10b981;
             transition: all 0.3s ease;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 600;
-            padding: 14px 20px;
+            padding: 12px 20px;
             border-radius: 10px;
             color: white;
             width: 100%;
+            border: none;
+            cursor: pointer;
+            min-height: 44px;
+            -webkit-appearance: none;
+        }
+
+        @media (min-width: 768px) {
+            .btn-submit {
+                font-size: 18px;
+                padding: 14px 20px;
+            }
         }
 
         .btn-submit:hover {
@@ -154,32 +261,167 @@
             box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
         }
 
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
         .footer-links {
             text-align: center;
-            margin-top: 30px;
+            margin-top: 24px;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
+            font-size: 0.9rem;
+        }
+
+        @media (min-width: 768px) {
+            .footer-links {
+                margin-top: 30px;
+                gap: 15px;
+                font-size: 1rem;
+            }
         }
 
         .footer-links a {
             color: #10b981;
             transition: color 0.2s;
             text-decoration: none;
+            font-weight: 600;
         }
 
         .footer-links a:hover {
             color: #059669;
+            text-decoration: underline;
         }
 
         .section-icon {
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        @media (min-width: 768px) {
+            .section-icon {
+                width: 24px;
+                height: 24px;
+            }
         }
 
         .gender-icon {
             width: 20px;
             height: 20px;
+        }
+
+        /* Responsive grid utilities */
+        .grid-responsive {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        @media (min-width: 640px) {
+            .grid-responsive {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+            }
+        }
+
+        .grid-responsive-full {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        @media (min-width: 640px) {
+            .grid-responsive-full {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+        }
+
+        /* Touch-friendly spacing for mobile */
+        @media (max-width: 640px) {
+            input[type="text"],
+            input[type="email"],
+            input[type="password"],
+            select,
+            label {
+                font-size: 16px;
+            }
+
+            .form-card {
+                margin-bottom: 16px;
+            }
+        }
+
+        /* Flexbox for gender selection that's responsive */
+        .gender-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        @media (min-width: 768px) {
+            .gender-options {
+                gap: 16px;
+            }
+        }
+
+        .gender-options label {
+            user-select: none;
+        }
+
+        /* Terms section */
+        .terms-section {
+            padding: 16px;
+        }
+
+        @media (min-width: 768px) {
+            .terms-section {
+                padding: 20px;
+            }
+        }
+
+        .terms-section input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            min-width: 20px;
+            cursor: pointer;
+        }
+
+        .terms-section label {
+            font-size: 0.85rem;
+        }
+
+        @media (min-width: 768px) {
+            .terms-section label {
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Error and Success Alerts */
+        .error-alert {
+            background-color: #fef2f2;
+            border-left-color: #dc2626;
+            border-left-width: 4px;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .error-alert h3 {
+            color: #991b1b;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .error-alert ul {
+            color: #7f1d1d;
+            font-size: 0.875rem;
+        }
+
+        .error-alert li {
+            margin-bottom: 0.25rem;
         }
     </style>
 </head>
@@ -205,6 +447,25 @@
                 <p>Join our farming community and manage your farm efficiently</p>
             </div>
 
+            <!-- Alert Messages -->
+            @if ($errors->any())
+                <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg mb-6">
+                    <div class="flex items-start">
+                        <svg class="w-5 h-5 text-red-500 mt-0.5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4v.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <div>
+                            <h3 class="text-red-800 font-semibold mb-2">Registration Error</h3>
+                            <ul class="text-red-700 text-sm space-y-1 list-disc list-inside">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             <!-- Registration Form -->
             <form method="POST" action="{{ route('register.store') }}" class="space-y-6">
                 @csrf
@@ -220,7 +481,7 @@
                     </div>
 
                     <!-- First Name and Last Name -->
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid-responsive">
                         <div class="form-group">
                             <label for="first_name">First Name *</label>
                             <input
@@ -250,7 +511,7 @@
                     </div>
 
                     <!-- Phone and Email -->
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid-responsive">
                         <div class="form-group">
                             <label for="phone">Phone Number</label>
                             <input
@@ -281,10 +542,10 @@
                     <!-- Sex Selection -->
                     <div class="form-group">
                         <label>Sex *</label>
-                        <div class="grid grid-cols-2 gap-3">
+                        <div class="gender-options">
                             <label class="flex items-center cursor-pointer p-3 border-2 border-gray-300 rounded-lg hover:border-emerald-500 transition has-[:checked]:border-emerald-500 has-[:checked]:bg-emerald-50">
                                 <input type="radio" name="sex" value="male" class="w-5 h-5 text-emerald-600 cursor-pointer" {{ old('sex') === 'male' ? 'checked' : '' }}>
-                                <span class="ml-3 flex items-center gap-2 text-gray-700 font-medium">
+                                <span class="ml-2 flex items-center gap-2 text-gray-700 font-medium text-sm md:text-base">
                                     <svg class="w-5 h-5 text-emerald-600" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.67 14 5 15.17 5 17.5V20H19V17.5C19 15.17 14.33 14 12 14Z"/>
                                     </svg>
@@ -293,7 +554,7 @@
                             </label>
                             <label class="flex items-center cursor-pointer p-3 border-2 border-gray-300 rounded-lg hover:border-pink-500 transition has-[:checked]:border-pink-500 has-[:checked]:bg-pink-50">
                                 <input type="radio" name="sex" value="female" class="w-5 h-5 text-emerald-600 cursor-pointer" {{ old('sex') === 'female' ? 'checked' : '' }}>
-                                <span class="ml-3 flex items-center gap-2 text-gray-700 font-medium">
+                                <span class="ml-2 flex items-center gap-2 text-gray-700 font-medium text-sm md:text-base">
                                     <svg class="w-5 h-5 text-pink-600" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.67 14 5 15.17 5 17.5V20H19V17.5C19 15.17 14.33 14 12 14Z"/>
                                     </svg>
@@ -315,7 +576,7 @@
                         <span>Address Information (Cagayan Province)</span>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid-responsive">
                         <div class="form-group">
                             <label for="house_number">House Number</label>
                             <input
@@ -341,20 +602,22 @@
                             >
                             @error('zone_purok') <span class="text-red-600 text-sm mt-2 block">{{ $message }}</span> @enderror
                         </div>
+                    </div>
 
-                        <div class="form-group col-span-2">
-                            <label for="address">Street Address</label>
-                            <input
-                                type="text"
-                                id="address"
-                                name="address"
-                                placeholder="e.g., Maharlika Avenue, Bonifacio Street"
-                                class="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg transition focus:border-emerald-500 focus:outline-none"
-                                value="{{ old('address') }}"
-                            >
-                            @error('address') <span class="text-red-600 text-sm mt-2 block">{{ $message }}</span> @enderror
-                        </div>
+                    <div class="form-group">
+                        <label for="address">Street Address</label>
+                        <input
+                            type="text"
+                            id="address"
+                            name="address"
+                            placeholder="e.g., Maharlika Avenue, Bonifacio Street"
+                            class="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg transition focus:border-emerald-500 focus:outline-none"
+                            value="{{ old('address') }}"
+                        >
+                        @error('address') <span class="text-red-600 text-sm mt-2 block">{{ $message }}</span> @enderror
+                    </div>
 
+                    <div class="grid-responsive">
                         <div class="form-group">
                             <label for="municipality">City/Municipality *</label>
                             <select
@@ -421,7 +684,7 @@
                         <span>Account Credentials</span>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid-responsive">
                         <!-- Password Input -->
                         <div class="form-group">
                             <label for="password">Password *</label>
@@ -481,16 +744,20 @@
                                     </svg>
                                 </button>
                             </div>
+                            @error('password_confirmation') <span class="text-red-600 text-sm mt-2 block">{{ $message }}</span> @enderror
                         </div>
                     </div>
                 </div>
 
                 <!-- Terms & Conditions -->
-                <div class="flex items-start gap-3 p-4 bg-emerald-50 rounded-xl border-l-4 border-emerald-600">
-                    <input type="checkbox" id="terms" name="terms" class="w-5 h-5 text-emerald-600 rounded cursor-pointer mt-1" required>
-                    <label for="terms" class="text-sm text-gray-700">
-                        I agree to the <span class="font-semibold text-emerald-700 cursor-pointer hover:underline">Terms of Service</span> and <span class="font-semibold text-emerald-700 cursor-pointer hover:underline">Privacy Policy</span>
-                    </label>
+                <div class="terms-section p-4 rounded-xl border-l-4 @error('terms') bg-red-50 border-red-600 @else bg-emerald-50 border-emerald-600 @enderror">
+                    <div class="flex items-start gap-3">
+                        <input type="checkbox" id="terms" name="terms" class="w-5 h-5 text-emerald-600 rounded cursor-pointer mt-1" @if(old('terms')) checked @endif>
+                        <label for="terms" class="text-sm @error('terms') text-red-700 @else text-gray-700 @enderror">
+                            I agree to the <span class="font-semibold @error('terms') text-red-700 @else text-emerald-700 @enderror cursor-pointer hover:underline">Terms of Service</span> and <span class="font-semibold @error('terms') text-red-700 @else text-emerald-700 @enderror cursor-pointer hover:underline">Privacy Policy</span>
+                        </label>
+                    </div>
+                    @error('terms') <span class="text-red-600 text-sm mt-2 block">{{ $message }}</span> @enderror
                 </div>
 
                 <!-- Submit Button -->
@@ -512,8 +779,6 @@
                     </div>
                 </div>
             </form>
-        </div>
-    </div>
         </div>
     </div>
 

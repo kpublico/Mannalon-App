@@ -256,6 +256,85 @@
             contentArea.scrollTop = 0;
         }
 
+        // Verify farmer - updates farmer status to verified
+        function verifyFarmer(farmerId) {
+            if (!confirm('Are you sure you want to verify this farmer?')) {
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('_method', 'PUT');
+            formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
+            formData.append('status', 'verified');
+
+            fetch(`/admin/farmers/${farmerId}/status`, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json ? response.json() : response.text();
+            })
+            .then(data => {
+                // Show success message
+                const contentArea = document.getElementById('admin-content');
+                const successDiv = document.createElement('div');
+                successDiv.className = 'fixed top-4 right-4 bg-green-50 border-l-4 border-green-500 p-4 rounded-lg shadow-lg z-50';
+                successDiv.innerHTML = `
+                    <div class="flex items-center">
+                        <i class="fas fa-check-circle text-green-600 mr-3"></i>
+                        <div>
+                            <p class="text-green-800 font-bold">Success!</p>
+                            <p class="text-green-700 text-sm">Farmer has been verified successfully.</p>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(successDiv);
+                
+                // Auto-remove message after 5 seconds
+                setTimeout(() => {
+                    successDiv.style.transition = 'opacity 0.5s';
+                    successDiv.style.opacity = '0';
+                    setTimeout(() => successDiv.remove(), 500);
+                }, 5000);
+
+                // Reload the current page to reflect changes
+                const currentPage = document.querySelector('.sidebar-nav-link.active')?.getAttribute('data-page') || 'dashboard';
+                const currentRoute = currentPage === 'dashboard' 
+                    ? '{{ route('admin.dashboard') }}' 
+                    : (currentPage === 'farmers' ? '{{ route('admin.farmers.index') }}' : '{{ route('admin.dashboard') }}');
+                
+                setTimeout(() => {
+                    loadAdminPage(currentPage, currentRoute);
+                }, 1500);
+            })
+            .catch(error => {
+                console.error('Error verifying farmer:', error);
+                const contentArea = document.getElementById('admin-content');
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'fixed top-4 right-4 bg-red-50 border-l-4 border-red-500 p-4 rounded-lg shadow-lg z-50';
+                errorDiv.innerHTML = `
+                    <div class="flex items-center">
+                        <i class="fas fa-exclamation-circle text-red-600 mr-3"></i>
+                        <div>
+                            <p class="text-red-800 font-bold">Error!</p>
+                            <p class="text-red-700 text-sm">Failed to verify farmer. Please try again.</p>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(errorDiv);
+                
+                setTimeout(() => {
+                    errorDiv.style.transition = 'opacity 0.5s';
+                    errorDiv.style.opacity = '0';
+                    setTimeout(() => errorDiv.remove(), 500);
+                }, 5000);
+            });
+        }
+
         // Load dashboard on page load
         document.addEventListener('DOMContentLoaded', function() {
             loadAdminPage('dashboard', '{{ route('admin.dashboard') }}');

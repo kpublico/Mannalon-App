@@ -90,9 +90,9 @@
                             <td class="px-4 py-3 text-gray-600 text-sm">{{ $guide->updated_at?->format('M d, Y') }}</td>
                             <td class="px-4 py-3">
                                 <div class="flex justify-center gap-2">
-                                    <a href="{{ route('admin.guides.edit', $guide->id) }}" class="px-3 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                                    <button type="button" onclick="window.location.href='{{ route('admin.guides.edit', $guide->id) }}'" class="px-3 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700 transition">
                                         <i class="fas fa-edit mr-1"></i> Edit
-                                    </a>
+                                    </button>
                                     <form method="POST" action="{{ route('admin.guides.destroy', $guide->id) }}" onsubmit="return confirm('Delete this guide?')" class="inline">
                                         @csrf
                                         @method('DELETE')
