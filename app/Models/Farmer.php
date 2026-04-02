@@ -12,7 +12,7 @@ class Farmer extends Model
     protected $fillable = [
         'user_id',
         'name',
-        'first_name',
+        'first_name', 
         'middle_name',
         'last_name',
         'gender',

@@ -1,0 +1,35 @@
+{
+  "ILO_sample_municipalities": [
+    {
+      "code": "ILO_AREVALO",
+      "name": "Arevalo",
+      "barangays": [
+        { "code": "ILO_AREVALO_1", "name": "Arevalo (Proper)" },
+        { "code": "ILO_AREVALO_2", "name": "Baluarte" },
+        { "code": "ILO_AREVALO_3", "name": "Bolilao" },
+        { "code": "ILO_AREVALO_4", "name": "Buntatala" }
+      ]
+    },
+    {
+      "code": "ILO_CITY",
+      "name": "Iloilo City",
+      "barangays": [
+        { "code": "ILO_CITY_1", "name": "Arevalo (Proper)" },
+        { "code": "ILO_CITY_2", "name": "Banago" },
+        { "code": "ILO_CITY_3", "name": "Caaga" },
+        { "code": "ILO_CITY_4", "name": "Colon" }
+      ]
+    },
+    {
+      "code": "ILO_JARO",
+      "name": "Jaro",
+      "barangays": [
+        { "code": "ILO_JARO_1", "name": "Abeto" },
+        { "code": "ILO_JARO_2", "name": "Agsungot" },
+        { "code": "ILO_JARO_3", "name": "Alegre" },
+        { "code": "ILO_JARO_4", "name": "Boltin" }
+      ]
+    }
+  ],
+  "information": "This is sample data for Philippine locations. For production use, integrate with a complete municipalities and barangays database."
+}

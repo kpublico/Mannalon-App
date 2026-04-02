@@ -7,6 +7,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminLandManagementController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\MessagingController;
+use App\Http\Controllers\LocationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,6 +22,14 @@ Route::get('/test', function () {
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+// Public Location API (used by registration and public forms)
+Route::prefix('api/locations')->name('api.locations.')->group(function () {
+    Route::get('/regions', [LocationController::class, 'regions'])->name('regions');
+    Route::get('/provinces', [LocationController::class, 'provinces'])->name('provinces');
+    Route::get('/cities', [LocationController::class, 'cities'])->name('cities');
+    Route::get('/barangays', [LocationController::class, 'barangays'])->name('barangays');
 });
 
 // Auth Routes
@@ -95,6 +104,13 @@ Route::middleware('auth')->group(function () {
         Route::delete('/admin/farmers/{farmer}', [AdminController::class, 'farmersDestroy'])->name('admin.farmers.destroy');
         Route::get('/admin/farmers/{id}', [AdminController::class, 'farmerDetails'])->name('admin.farmers.show');
         Route::put('/admin/farmers/{id}/status', [AdminController::class, 'updateFarmerStatus'])->name('admin.farmers.status');
+        
+        // Location API Endpoints
+        Route::get('/admin/api/locations/regions', [AdminController::class, 'getRegions'])->name('admin.api.locations.regions');
+        Route::get('/admin/api/locations/provinces', [AdminController::class, 'getProvincesByRegion'])->name('admin.api.locations.provinces');
+        Route::get('/admin/api/locations/municipalities', [AdminController::class, 'getMunicipalitiesByProvince'])->name('admin.api.locations.municipalities');
+        Route::get('/admin/api/locations/barangays', [AdminController::class, 'getBarangaysByMunicipality'])->name('admin.api.locations.barangays');
+        Route::get('/admin/api/locations/sitios', [AdminController::class, 'getSitiosByBarangay'])->name('admin.api.locations.sitios');
         
         // Content Management (Announcements, Guides, Weather, Market Prices)
         Route::get('/admin/announcements', [AdminController::class, 'announcementsIndex'])->name('admin.announcements.index');

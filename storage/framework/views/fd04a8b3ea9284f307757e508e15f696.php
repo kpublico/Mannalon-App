@@ -206,8 +206,8 @@
             </div>
 
             <!-- Registration Form -->
-            <form method="POST" action="{{ route('register.store') }}" class="space-y-6">
-                @csrf
+            <form method="POST" action="<?php echo e(route('register.store')); ?>" class="space-y-6">
+                <?php echo csrf_field(); ?>
 
                 <!-- SECTION 1: Personal Information -->
                 <div class="form-card">
@@ -229,10 +229,17 @@
                                 name="first_name"
                                 placeholder="Juan"
                                 class="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg transition"
-                                value="{{ old('first_name') }}"
+                                value="<?php echo e(old('first_name')); ?>"
                                 required
                             >
-                            @error('first_name') <span class="text-red-600 text-sm mt-2 block">{{ $message }}</span> @enderror
+                            <?php $__errorArgs = ['first_name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <span class="text-red-600 text-sm mt-2 block"><?php echo e($message); ?></span> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                         </div>
                         <div class="form-group">
                             <label for="last_name">Last Name *</label>
@@ -242,10 +249,17 @@
                                 name="last_name"
                                 placeholder="Dela Cruz"
                                 class="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg transition"
-                                value="{{ old('last_name') }}"
+                                value="<?php echo e(old('last_name')); ?>"
                                 required
                             >
-                            @error('last_name') <span class="text-red-600 text-sm mt-2 block">{{ $message }}</span> @enderror
+                            <?php $__errorArgs = ['last_name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <span class="text-red-600 text-sm mt-2 block"><?php echo e($message); ?></span> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                         </div>
                     </div>
 
@@ -259,9 +273,16 @@
                                 name="phone"
                                 placeholder="09XXXXXXXXX"
                                 class="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg transition"
-                                value="{{ old('phone') }}"
+                                value="<?php echo e(old('phone')); ?>"
                             >
-                            @error('phone') <span class="text-red-600 text-sm mt-2 block">{{ $message }}</span> @enderror
+                            <?php $__errorArgs = ['phone'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <span class="text-red-600 text-sm mt-2 block"><?php echo e($message); ?></span> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                         </div>
                         <div class="form-group">
                             <label for="email">Email Address *</label>
@@ -271,10 +292,17 @@
                                 name="email"
                                 placeholder="you@example.com"
                                 class="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg transition"
-                                value="{{ old('email') }}"
+                                value="<?php echo e(old('email')); ?>"
                                 required
                             >
-                            @error('email') <span class="text-red-600 text-sm mt-2 block">{{ $message }}</span> @enderror
+                            <?php $__errorArgs = ['email'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <span class="text-red-600 text-sm mt-2 block"><?php echo e($message); ?></span> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                         </div>
                     </div>
 
@@ -283,7 +311,7 @@
                         <label>Sex *</label>
                         <div class="grid grid-cols-2 gap-3">
                             <label class="flex items-center cursor-pointer p-3 border-2 border-gray-300 rounded-lg hover:border-emerald-500 transition has-[:checked]:border-emerald-500 has-[:checked]:bg-emerald-50">
-                                <input type="radio" name="sex" value="male" class="w-5 h-5 text-emerald-600 cursor-pointer" {{ old('sex') === 'male' ? 'checked' : '' }}>
+                                <input type="radio" name="sex" value="male" class="w-5 h-5 text-emerald-600 cursor-pointer" <?php echo e(old('sex') === 'male' ? 'checked' : ''); ?>>
                                 <span class="ml-3 flex items-center gap-2 text-gray-700 font-medium">
                                     <svg class="w-5 h-5 text-emerald-600" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.67 14 5 15.17 5 17.5V20H19V17.5C19 15.17 14.33 14 12 14Z"/>
@@ -292,7 +320,7 @@
                                 </span>
                             </label>
                             <label class="flex items-center cursor-pointer p-3 border-2 border-gray-300 rounded-lg hover:border-pink-500 transition has-[:checked]:border-pink-500 has-[:checked]:bg-pink-50">
-                                <input type="radio" name="sex" value="female" class="w-5 h-5 text-emerald-600 cursor-pointer" {{ old('sex') === 'female' ? 'checked' : '' }}>
+                                <input type="radio" name="sex" value="female" class="w-5 h-5 text-emerald-600 cursor-pointer" <?php echo e(old('sex') === 'female' ? 'checked' : ''); ?>>
                                 <span class="ml-3 flex items-center gap-2 text-gray-700 font-medium">
                                     <svg class="w-5 h-5 text-pink-600" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.67 14 5 15.17 5 17.5V20H19V17.5C19 15.17 14.33 14 12 14Z"/>
@@ -301,7 +329,14 @@
                                 </span>
                             </label>
                         </div>
-                        @error('sex') <span class="text-red-600 text-sm mt-2 block">{{ $message }}</span> @enderror
+                        <?php $__errorArgs = ['sex'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <span class="text-red-600 text-sm mt-2 block"><?php echo e($message); ?></span> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                     </div>
                 </div>
 
@@ -324,9 +359,16 @@
                                 name="house_number"
                                 placeholder="e.g., 123"
                                 class="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg transition focus:border-emerald-500 focus:outline-none"
-                                value="{{ old('house_number') }}"
+                                value="<?php echo e(old('house_number')); ?>"
                             >
-                            @error('house_number') <span class="text-red-600 text-sm mt-2 block">{{ $message }}</span> @enderror
+                            <?php $__errorArgs = ['house_number'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <span class="text-red-600 text-sm mt-2 block"><?php echo e($message); ?></span> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                         </div>
 
                         <div class="form-group">
@@ -337,9 +379,16 @@
                                 name="zone_purok"
                                 placeholder="e.g., Purok 1, Zone A"
                                 class="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg transition focus:border-emerald-500 focus:outline-none"
-                                value="{{ old('zone_purok') }}"
+                                value="<?php echo e(old('zone_purok')); ?>"
                             >
-                            @error('zone_purok') <span class="text-red-600 text-sm mt-2 block">{{ $message }}</span> @enderror
+                            <?php $__errorArgs = ['zone_purok'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <span class="text-red-600 text-sm mt-2 block"><?php echo e($message); ?></span> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                         </div>
 
                         <div class="form-group col-span-2">
@@ -350,9 +399,16 @@
                                 name="address"
                                 placeholder="e.g., Maharlika Avenue, Bonifacio Street"
                                 class="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg transition focus:border-emerald-500 focus:outline-none"
-                                value="{{ old('address') }}"
+                                value="<?php echo e(old('address')); ?>"
                             >
-                            @error('address') <span class="text-red-600 text-sm mt-2 block">{{ $message }}</span> @enderror
+                            <?php $__errorArgs = ['address'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <span class="text-red-600 text-sm mt-2 block"><?php echo e($message); ?></span> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                         </div>
 
                         <div class="form-group">
@@ -364,7 +420,14 @@
                             >
                                 <option value="">Select region</option>
                             </select>
-                            @error('region') <span class="text-red-600 text-sm mt-2 block">{{ $message }}</span> @enderror
+                            <?php $__errorArgs = ['region'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <span class="text-red-600 text-sm mt-2 block"><?php echo e($message); ?></span> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                         </div>
 
                         <div class="form-group">
@@ -377,7 +440,14 @@
                             >
                                 <option value="">Select province</option>
                             </select>
-                            @error('state') <span class="text-red-600 text-sm mt-2 block">{{ $message }}</span> @enderror
+                            <?php $__errorArgs = ['state'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <span class="text-red-600 text-sm mt-2 block"><?php echo e($message); ?></span> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                         </div>
 
                         <div class="form-group">
@@ -391,7 +461,14 @@
                             >
                                 <option value="">Select municipality/city</option>
                             </select>
-                            @error('city') <span class="text-red-600 text-sm mt-2 block">{{ $message }}</span> @enderror
+                            <?php $__errorArgs = ['city'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <span class="text-red-600 text-sm mt-2 block"><?php echo e($message); ?></span> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                         </div>
 
                         <div class="form-group">
@@ -405,7 +482,14 @@
                             >
                                 <option value="">Select barangay</option>
                             </select>
-                            @error('barangay') <span class="text-red-600 text-sm mt-2 block">{{ $message }}</span> @enderror
+                            <?php $__errorArgs = ['barangay'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <span class="text-red-600 text-sm mt-2 block"><?php echo e($message); ?></span> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                         </div>
                     </div>
                 </div>
@@ -449,7 +533,14 @@
                                     </svg>
                                 </button>
                             </div>
-                            @error('password') <span class="text-red-600 text-sm mt-2 block">{{ $message }}</span> @enderror
+                            <?php $__errorArgs = ['password'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <span class="text-red-600 text-sm mt-2 block"><?php echo e($message); ?></span> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                         </div>
 
                         <!-- Confirm Password Input -->
@@ -504,10 +595,10 @@
                 <div class="footer-links">
                     <div class="text-gray-700">
                         Already have an account?
-                        <a href="{{ route('login') }}">Log In</a>
+                        <a href="<?php echo e(route('login')); ?>">Log In</a>
                     </div>
                     <div>
-                        <a href="{{ url('/') }}">← Back to Home</a>
+                        <a href="<?php echo e(url('/')); ?>">← Back to Home</a>
                     </div>
                 </div>
             </form>
@@ -524,14 +615,14 @@
             const citySel     = document.getElementById('municipality');
             const barangaySel = document.getElementById('barangay');
 
-            const oldRegion   = @json(old('region', ''));
-            const oldState    = @json(old('state', ''));
-            const oldCity     = @json(old('city', ''));
-            const oldBarangay = @json(old('barangay', ''));
+            const oldRegion   = <?php echo json_encode(old('region', ''), 512) ?>;
+            const oldState    = <?php echo json_encode(old('state', ''), 512) ?>;
+            const oldCity     = <?php echo json_encode(old('city', ''), 512) ?>;
+            const oldBarangay = <?php echo json_encode(old('barangay', ''), 512) ?>;
 
             async function loadRegions() {
                 try {
-                    const res = await fetch("{{ route('api.locations.regions') }}");
+                    const res = await fetch("<?php echo e(route('api.locations.regions')); ?>");
                     const data = await res.json();
                     regionSel.innerHTML = '<option value="">Select region</option>';
                     data.forEach(r => {
@@ -560,7 +651,7 @@
                     return;
                 }
                 try {
-                    const res = await fetch("{{ route('api.locations.provinces') }}?region_code=" + encodeURIComponent(regionCode));
+                    const res = await fetch("<?php echo e(route('api.locations.provinces')); ?>?region_code=" + encodeURIComponent(regionCode));
                     const data = await res.json();
                     provinceSel.innerHTML = '<option value="">Select province</option>';
                     provinceSel.disabled = false;
@@ -588,7 +679,7 @@
                     return;
                 }
                 try {
-                    const res = await fetch("{{ route('api.locations.cities') }}?province_code=" + encodeURIComponent(provinceCode));
+                    const res = await fetch("<?php echo e(route('api.locations.cities')); ?>?province_code=" + encodeURIComponent(provinceCode));
                     const data = await res.json();
                     citySel.innerHTML = '<option value="">Select municipality/city</option>';
                     citySel.disabled = false;
@@ -614,7 +705,7 @@
                     return;
                 }
                 try {
-                    const res = await fetch("{{ route('api.locations.barangays') }}?city_code=" + encodeURIComponent(cityCode));
+                    const res = await fetch("<?php echo e(route('api.locations.barangays')); ?>?city_code=" + encodeURIComponent(cityCode));
                     const data = await res.json();
                     barangaySel.innerHTML = '<option value="">Select barangay</option>';
                     barangaySel.disabled = false;
@@ -666,3 +757,4 @@
 </body>
 </html>
 
+<?php /**PATH /home/runner/work/Mannalon-App/Mannalon-App/resources/views/auth/register.blade.php ENDPATH**/ ?>

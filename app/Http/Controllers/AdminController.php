@@ -49,7 +49,18 @@ class AdminController extends Controller
             'recentGuides' => FarmingGuide::orderByDesc('created_at')->limit(5)->get(),
             'recentCommodityPrices' => CommodityPrice::orderByDesc('date_updated')->limit(5)->get(),
             'recentAdmins' => User::whereIn('role', ['admin', 'super_admin'])->orderByDesc('created_at')->limit(5)->get(),
+            'allFarmers' => Farmer::orderBy('last_name')->orderBy('first_name')->get(),
         ];
+
+        // Handle farmer selection from query parameter
+        $selectedFarmerId = $request->query('selected_farmer');
+        $selectedDashboardFarmer = null;
+
+        if ($selectedFarmerId) {
+            $selectedDashboardFarmer = Farmer::find($selectedFarmerId);
+        }
+
+        $dashboardData['selectedDashboardFarmer'] = $selectedDashboardFarmer;
 
         if ($request->header('X-Requested-With') === 'XMLHttpRequest') {
             if ($isSuperAdmin) {
@@ -79,10 +90,24 @@ class AdminController extends Controller
         }
 
         $farmers = $query->orderBy('last_name')->orderBy('first_name')->paginate(15);
+        $registeredFarmerUsers = User::query()
+            ->where('role', 'farmer')
+            ->whereDoesntHave('farmerProfile')
+            ->orderBy('name')
+            ->get(['id', 'name', 'email', 'phone']);
+
         if ($request->header('X-Requested-With') === 'XMLHttpRequest') {
-            return view('admin.farmers-content', ['farmers' => $farmers, 'search' => $search]);
+            return view('admin.farmers-content', [
+                'farmers' => $farmers,
+                'search' => $search,
+                'registeredFarmerUsers' => $registeredFarmerUsers,
+            ]);
         }
-        return view('admin.farmers.index', ['farmers' => $farmers, 'search' => $search]);
+        return view('admin.farmers.index', [
+            'farmers' => $farmers,
+            'search' => $search,
+            'registeredFarmerUsers' => $registeredFarmerUsers,
+        ]);
     }
 
     /**
@@ -103,7 +128,7 @@ class AdminController extends Controller
             Farmer::create($payload);
         });
 
-        return back()->with('success', 'Farmer information created successfully.');
+        return redirect()->route('admin.farmers.index')->with('success', 'Farmer information created successfully.');
     }
 
     /**
@@ -111,7 +136,7 @@ class AdminController extends Controller
      */
     public function farmersUpdate(Request $request, Farmer $farmer): RedirectResponse
     {
-        $validated = $request->validate($this->farmerValidationRules());
+        $validated = $request->validate($this->farmerValidationRules($farmer));
 
         DB::transaction(function () use ($request, $validated, $farmer): void {
             $payload = $this->buildFarmerPayload($validated);
@@ -170,6 +195,57 @@ class AdminController extends Controller
     }
 
     /**
+     * Display farmer information dashboard with selector and analytics
+     */
+    public function farmerInformationDashboard(Request $request): View
+    {
+        $selectedFarmerId = $request->query('farmer_id');
+        $farmer = null;
+        $analytics = [];
+
+        // Get all farmers for the selector dropdown
+        $allFarmers = Farmer::orderBy('last_name')->orderBy('first_name')->get();
+
+        if ($selectedFarmerId) {
+            $farmer = Farmer::with(['farmDetail', 'beneficiaries', 'user'])->findOrFail($selectedFarmerId);
+            $user = $farmer->user;
+            $crops = $user ? $user->crops()->get() : collect();
+            $livestock = $user ? $user->livestock()->get() : collect();
+
+            // Build analytics data
+            $analytics = [
+                'farmer_id' => $farmer->id,
+                'full_name' => $farmer->first_name . ' ' . $farmer->last_name,
+                'email' => $user?->email ?? 'N/A',
+                'phone' => $farmer->phone ?? 'N/A',
+                'status' => $farmer->profile_status ?? 'active',
+                'user_status' => $user?->status ?? 'inactive',
+                'registration_date' => $farmer->created_at?->format('M d, Y'),
+                'location' => ($farmer->municipality_city ?? 'N/A') . ', ' . ($farmer->province ?? 'N/A'),
+                'farmer_type' => $farmer->farmer_type ?? 'Not specified',
+                'years_in_farming' => $farmer->years_in_farming ?? 0,
+                'farm_size_hectares' => $farmer->farm_size_hectares ?? 0,
+                'land_ownership' => $farmer->land_ownership_type ?? 'Not specified',
+                'total_crops' => $crops->count(),
+                'total_livestock' => $livestock->count(),
+                'is_association_member' => $farmer->is_association_member ? 'Yes' : 'No',
+                'association_name' => $farmer->association_name ?? 'None',
+                'crops' => $crops->pluck('name')->join(', ') ?: 'None',
+                'livestock_types' => $livestock->pluck('name')->join(', ') ?: 'None',
+                'government_id_type' => $farmer->government_id_type ?? 'Not provided',
+                'government_id_number' => $farmer->government_id_number ?? 'Not provided',
+            ];
+        }
+
+        return view('admin.farmer-information-dashboard', [
+            'farmer' => $farmer,
+            'allFarmers' => $allFarmers,
+            'analytics' => $analytics,
+            'selectedFarmerId' => $selectedFarmerId,
+        ]);
+    }
+
+    /**
      * Update farmer status
      */
     public function updateFarmerStatus(Request $request, $id): RedirectResponse
@@ -190,12 +266,19 @@ class AdminController extends Controller
     /**
      * Farmer validation rules for create and update.
      */
-    private function farmerValidationRules(): array
+    private function farmerValidationRules(?Farmer $farmer = null): array
     {
+        $userIdRules = [
+            $farmer ? 'nullable' : 'required',
+            Rule::exists('users', 'id')->where(static fn ($query) => $query->where('role', 'farmer')),
+            Rule::unique('farmers', 'user_id')->ignore($farmer?->id),
+        ];
+
         return [
-            'first_name' => ['required', 'string', 'max:100'],
+            'user_id' => $userIdRules,
+            'first_name' => ['required_without:user_id', 'nullable', 'string', 'max:100'],
             'middle_name' => ['nullable', 'string', 'max:100'],
-            'last_name' => ['required', 'string', 'max:100'],
+            'last_name' => ['required_without:user_id', 'nullable', 'string', 'max:100'],
             'gender' => ['nullable', Rule::in(['male', 'female', 'other'])],
             'date_of_birth' => ['nullable', 'date'],
             'age' => ['nullable', 'integer', 'min:1', 'max:120'],
@@ -254,6 +337,31 @@ class AdminController extends Controller
      */
     private function buildFarmerPayload(array $validated): array
     {
+        if (!empty($validated['user_id'])) {
+            $linkedUser = User::query()
+                ->where('role', 'farmer')
+                ->find($validated['user_id']);
+
+            if ($linkedUser) {
+                $nameParts = preg_split('/\s+/', trim((string) $linkedUser->name)) ?: [];
+                if (($validated['first_name'] ?? '') === '' && count($nameParts) > 0) {
+                    $validated['first_name'] = $nameParts[0];
+                }
+                if (($validated['last_name'] ?? '') === '' && count($nameParts) > 1) {
+                    $validated['last_name'] = $nameParts[count($nameParts) - 1];
+                }
+                if (($validated['middle_name'] ?? '') === '' && count($nameParts) > 2) {
+                    $validated['middle_name'] = implode(' ', array_slice($nameParts, 1, -1));
+                }
+                if (($validated['email'] ?? '') === '' && !empty($linkedUser->email)) {
+                    $validated['email'] = $linkedUser->email;
+                }
+                if (($validated['phone'] ?? '') === '' && !empty($linkedUser->phone)) {
+                    $validated['phone'] = $linkedUser->phone;
+                }
+            }
+        }
+
         $fullName = trim(implode(' ', array_filter([
             $validated['first_name'] ?? null,
             $validated['middle_name'] ?? null,
@@ -368,6 +476,17 @@ class AdminController extends Controller
     {
         $reportData = $this->buildReportsAnalyticsData();
 
+        // Handle farmer selection
+        $selectedFarmerId = $request->query('farmer_id');
+        $selectedFarmer = null;
+
+        if ($selectedFarmerId) {
+            $selectedFarmer = Farmer::with(['farmDetail', 'beneficiaries', 'user'])->find($selectedFarmerId);
+        }
+
+        $reportData['selectedFarmerId'] = $selectedFarmerId;
+        $reportData['selectedFarmer'] = $selectedFarmer;
+
         if ($request->header('X-Requested-With') === 'XMLHttpRequest') {
             return view('admin.reports-analytics-content', $reportData);
         }
@@ -467,6 +586,38 @@ class AdminController extends Controller
             ->orderByDesc('created_at')
             ->get();
 
+        // Analytics for charts
+        $farmersByType = Farmer::select('farmer_type')
+            ->selectRaw('COUNT(*) as count')
+            ->groupBy('farmer_type')
+            ->get();
+
+        $farmersByLocation = Farmer::select('municipality_city')
+            ->selectRaw('COUNT(*) as count')
+            ->groupBy('municipality_city')
+            ->orderByDesc('count')
+            ->limit(10)
+            ->get();
+
+        $farmersByStatus = Farmer::select('profile_status')
+            ->selectRaw('COUNT(*) as count')
+            ->groupBy('profile_status')
+            ->get();
+
+        $farmSizeRanges = [
+            '0-1ha' => Farmer::where('farm_size_hectares', '<', 1)->count(),
+            '1-5ha' => Farmer::whereBetween('farm_size_hectares', [1, 5])->count(),
+            '5-10ha' => Farmer::whereBetween('farm_size_hectares', [5, 10])->count(),
+            '10+ha' => Farmer::where('farm_size_hectares', '>=', 10)->count(),
+        ];
+
+        $incomeRanges = [
+            'Under 20k' => Farmer::where('average_monthly_income', '<', 20000)->count(),
+            '20k-50k' => Farmer::whereBetween('average_monthly_income', [20000, 50000])->count(),
+            '50k-100k' => Farmer::whereBetween('average_monthly_income', [50000, 100000])->count(),
+            '100k+' => Farmer::where('average_monthly_income', '>=', 100000)->count(),
+        ];
+
         $summaryRows = [
             ['metric' => 'Total Farmers', 'value' => User::where('role', 'farmer')->count()],
             ['metric' => 'Active Today', 'value' => $activeToday],
@@ -502,6 +653,11 @@ class AdminController extends Controller
             'breakdownRows' => $breakdownRows,
             'farmerProfiles' => $farmerProfiles,
             'generatedAt' => now()->format('M d, Y h:i A'),
+            'farmersByType' => $farmersByType,
+            'farmersByLocation' => $farmersByLocation,
+            'farmersByStatus' => $farmersByStatus,
+            'farmSizeRanges' => $farmSizeRanges,
+            'incomeRanges' => $incomeRanges,
         ];
     }
 
@@ -999,5 +1155,79 @@ class AdminController extends Controller
             return view('admin.settings-content');
         }
         return view('admin.settings');
+    }
+
+    /**
+     * API endpoint to get all Philippine regions (PSGC data)
+     */
+    public function getRegions()
+    {
+        $regions = \App\Models\Address\PhRegion::orderBy('region_id')
+            ->get(['code', 'name', 'region_id'])
+            ->map(fn ($r) => ['code' => $r->region_id, 'name' => $r->name]);
+
+        return response()->json($regions);
+    }
+
+    /**
+     * API endpoint to get provinces by region code (PSGC data)
+     */
+    public function getProvincesByRegion(Request $request)
+    {
+        $regionCode = $request->query('region_code');
+        if (!$regionCode) {
+            return response()->json(['error' => 'Region code is required'], 422);
+        }
+
+        $provinces = \App\Models\Address\PhProvince::where('region_id', $regionCode)
+            ->orderBy('name')
+            ->get(['code', 'name', 'region_id', 'province_id'])
+            ->map(fn ($p) => ['code' => $p->province_id, 'name' => $p->name]);
+
+        return response()->json($provinces);
+    }
+
+    /**
+     * API endpoint to get municipalities/cities by province code (PSGC data)
+     */
+    public function getMunicipalitiesByProvince(Request $request)
+    {
+        $provinceCode = $request->query('province_code');
+        if (!$provinceCode) {
+            return response()->json(['error' => 'Province code is required'], 422);
+        }
+
+        $cities = \App\Models\Address\PhCity::where('province_id', $provinceCode)
+            ->orderBy('name')
+            ->get(['code', 'name', 'province_id', 'city_id'])
+            ->map(fn ($c) => ['code' => $c->city_id, 'name' => $c->name]);
+
+        return response()->json($cities);
+    }
+
+    /**
+     * API endpoint to get barangays by city/municipality code (PSGC data)
+     */
+    public function getBarangaysByMunicipality(Request $request)
+    {
+        $municipalityCode = $request->query('municipality_code');
+        if (!$municipalityCode) {
+            return response()->json(['error' => 'Municipality code is required'], 422);
+        }
+
+        $barangays = \App\Models\Address\PhBarangay::where('city_id', $municipalityCode)
+            ->orderBy('name')
+            ->get(['code', 'name', 'city_id'])
+            ->map(fn ($b) => ['code' => $b->code, 'name' => $b->name]);
+
+        return response()->json($barangays);
+    }
+
+    /**
+     * API endpoint for sitios/puroks (not in PSGC; returns empty array)
+     */
+    public function getSitiosByBarangay(Request $request)
+    {
+        return response()->json([]);
     }
 }

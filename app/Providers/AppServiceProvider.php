@@ -19,16 +19,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->register(\Illuminate\Filesystem\FilesystemServiceProvider::class);
-        $this->app->register(\Illuminate\View\ViewServiceProvider::class);
-        $this->app->register(\Illuminate\Routing\RoutingServiceProvider::class);
-        $this->app->register(\Illuminate\Auth\AuthServiceProvider::class);
-        $this->app->register(\Illuminate\Database\DatabaseServiceProvider::class);
-        $this->app->register(\Illuminate\Session\SessionServiceProvider::class);
-        $this->app->register(\Illuminate\Cookie\CookieServiceProvider::class);
-        $this->app->register(\Illuminate\Encryption\EncryptionServiceProvider::class);
-        $this->app->register(\Illuminate\Validation\ValidationServiceProvider::class);
-        $this->app->register(\Illuminate\Hashing\HashServiceProvider::class);
+        //
     }
 
     /**

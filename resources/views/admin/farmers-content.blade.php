@@ -164,6 +164,24 @@
             <section class="profile-card card-order-1">
                 <h4 class="font-semibold text-gray-900 mb-3">1. Personal Information - Personal Details</h4>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="md:col-span-3">
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Select Registered Farmer Account</label>
+                        <select name="user_id" id="registered_farmer_user_id" class="px-4 py-2 border border-gray-300 rounded-lg w-full" required>
+                            <option value="">Choose a registered farmer account</option>
+                            @foreach(($registeredFarmerUsers ?? collect()) as $registeredUser)
+                                <option
+                                    value="{{ $registeredUser->id }}"
+                                    data-name="{{ $registeredUser->name }}"
+                                    data-email="{{ $registeredUser->email }}"
+                                    data-phone="{{ $registeredUser->phone }}"
+                                    @selected((string) old('user_id') === (string) $registeredUser->id)
+                                >
+                                    #{{ $registeredUser->id }} - {{ $registeredUser->name }} ({{ $registeredUser->email }})
+                                </option>
+                            @endforeach
+                        </select>
+                        <p class="text-xs text-gray-500 mt-1">Only farmer accounts without an existing farmer profile are listed.</p>
+                    </div>
                     <input type="text" name="first_name" placeholder="First name" value="{{ old('first_name') }}" class="px-4 py-2 border border-gray-300 rounded-lg" required>
                     <input type="text" name="middle_name" placeholder="Middle name" value="{{ old('middle_name') }}" class="px-4 py-2 border border-gray-300 rounded-lg">
                     <input type="text" name="last_name" placeholder="Last name" value="{{ old('last_name') }}" class="px-4 py-2 border border-gray-300 rounded-lg" required>
@@ -193,11 +211,34 @@
             <section class="profile-card card-order-2">
                 <h4 class="font-semibold text-gray-900 mb-3">2. Address Information - Primary Location</h4>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <input type="text" name="region" placeholder="Region" value="{{ old('region') }}" class="px-4 py-2 border border-gray-300 rounded-lg">
-                    <input type="text" name="province" placeholder="Province" value="{{ old('province') }}" class="px-4 py-2 border border-gray-300 rounded-lg">
-                    <input type="text" name="municipality_city" placeholder="Municipality/City" value="{{ old('municipality_city') }}" class="px-4 py-2 border border-gray-300 rounded-lg">
-                    <input type="text" name="barangay" placeholder="Barangay" value="{{ old('barangay') }}" class="px-4 py-2 border border-gray-300 rounded-lg">
-                    <input type="text" name="sitio_purok" placeholder="Sitio/Purok" value="{{ old('sitio_purok') }}" class="px-4 py-2 border border-gray-300 rounded-lg">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Region</label>
+                        <select name="region" id="farmer_region" class="px-4 py-2 border border-gray-300 rounded-lg w-full">
+                            <option value="">Select Region</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Province</label>
+                        <select name="province" id="farmer_province" class="px-4 py-2 border border-gray-300 rounded-lg w-full" disabled>
+                            <option value="">Select Province</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Municipality/City</label>
+                        <select name="municipality_city" id="farmer_municipality" class="px-4 py-2 border border-gray-300 rounded-lg w-full" disabled>
+                            <option value="">Select Municipality/City</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Barangay</label>
+                        <select name="barangay" id="farmer_barangay" class="px-4 py-2 border border-gray-300 rounded-lg w-full" disabled>
+                            <option value="">Select Barangay</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Sitio/Purok</label>
+                        <input type="text" name="sitio_purok" id="farmer_sitio" placeholder="Enter Sitio/Purok" value="{{ old('sitio_purok') }}" class="px-4 py-2 border border-gray-300 rounded-lg w-full">
+                    </div>
                     <div class="px-4 py-2 bg-emerald-50 border border-emerald-200 rounded-lg text-xs text-emerald-800">
                         GPS coordinates are managed in Farm Information map card.
                     </div>
@@ -350,8 +391,7 @@
                     </div>
                     <input type="text" name="verified_by" placeholder="Verified by (Admin name)" value="{{ old('verified_by') }}" class="px-4 py-2 border border-gray-300 rounded-lg">
                     <select name="profile_status" class="px-4 py-2 border border-gray-300 rounded-lg">
-                        <option value="pending" @selected(old('profile_status') === 'pending')>Pending</option>
-                        <option value="active" @selected(old('profile_status') === 'active')>Active</option>
+                        <option value="active" @selected(old('profile_status', 'active') === 'active')>Active</option>
                         <option value="inactive" @selected(old('profile_status') === 'inactive')>Inactive</option>
                         <option value="verified" @selected(old('profile_status') === 'verified')>Verified</option>
                     </select>
@@ -364,57 +404,79 @@
         </form>
     </div>
 
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <form method="GET" action="{{ route('admin.farmers.index') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="Search name, contact, location" class="px-4 py-2 border border-gray-300 rounded-lg md:col-span-3">
-            <button class="px-4 py-2 bg-emerald-100 text-emerald-700 rounded-lg hover:bg-emerald-200 font-semibold">Search</button>
-        </form>
-
-        <div class="overflow-x-auto">
-            <table class="w-full">
-                <thead class="bg-gray-50 border-b-2 border-gray-200">
-                    <tr>
-                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Name</th>
-                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Contact</th>
-                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Farm Location</th>
-                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Land Size</th>
-                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Status</th>
-                        <th class="px-4 py-3 text-center text-sm font-semibold text-gray-700">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200">
-                    @forelse($farmers as $farmer)
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-4 py-3 font-semibold text-gray-900">{{ $farmer->name }}</td>
-                            <td class="px-4 py-3 text-gray-600">{{ $farmer->phone ?? 'N/A' }}</td>
-                            <td class="px-4 py-3 text-gray-600">{{ $farmer->farm_location ?? 'N/A' }}</td>
-                            <td class="px-4 py-3 text-gray-600">{{ $farmer->farm_size_hectares !== null ? number_format((float) $farmer->farm_size_hectares, 2) . ' ha' : 'N/A' }}</td>
-                            <td class="px-4 py-3 text-gray-600">{{ ucfirst($farmer->profile_status ?? 'active') }}</td>
-                            <td class="px-4 py-3">
-                                <div class="flex items-center justify-center gap-2">
-                                    <a href="{{ route('admin.farmers.show', $farmer->id) }}" class="px-3 py-1 text-xs bg-blue-600 text-white rounded">View</a>
-                                    <form method="POST" action="{{ route('admin.farmers.destroy', $farmer) }}" onsubmit="return confirm('Delete this farmer information?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="px-3 py-1 text-xs bg-red-600 text-white rounded">Delete</button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="6" class="px-4 py-8 text-center text-gray-500">No farmer information yet.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-
-        <div class="mt-4">{{ $farmers->links() }}</div>
+    <div class="bg-white rounded-lg shadow-md p-6 border border-emerald-100">
+        <h4 class="text-lg font-semibold text-gray-900 mb-2">Farmer Data Display Location</h4>
+        <p class="text-sm text-gray-600 mb-4">Farmer summary/list has been removed from this page. All farmer data display is now under Reports &amp; Analytics.</p>
+        <a href="javascript:void(0)" onclick="typeof loadAdminPage === 'function' ? loadAdminPage('reports-analytics', '{{ route('admin.reports-analytics') }}') : (window.location.href='{{ route('admin.reports-analytics') }}')" class="inline-flex items-center px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 font-semibold">
+            <i class="fas fa-chart-line mr-2"></i>Open Reports &amp; Analytics
+        </a>
     </div>
 
 <script>
 (() => {
+    const userSelect = document.getElementById('registered_farmer_user_id');
+    const firstNameInput = document.querySelector('input[name="first_name"]');
+    const middleNameInput = document.querySelector('input[name="middle_name"]');
+    const lastNameInput = document.querySelector('input[name="last_name"]');
+    const emailInput = document.querySelector('input[name="email"]');
+    const phoneInput = document.querySelector('input[name="phone"]');
+
+    function splitNameParts(fullName) {
+        const parts = (fullName || '').trim().split(/\s+/).filter(Boolean);
+        if (parts.length === 0) {
+            return { first: '', middle: '', last: '' };
+        }
+        if (parts.length === 1) {
+            return { first: parts[0], middle: '', last: '' };
+        }
+        if (parts.length === 2) {
+            return { first: parts[0], middle: '', last: parts[1] };
+        }
+
+        return {
+            first: parts[0],
+            middle: parts.slice(1, -1).join(' '),
+            last: parts[parts.length - 1],
+        };
+    }
+
+    function applySelectedUserToForm() {
+        if (!userSelect || !firstNameInput || !middleNameInput || !lastNameInput || !emailInput || !phoneInput) {
+            return;
+        }
+
+        const selected = userSelect.options[userSelect.selectedIndex];
+        if (!selected || !selected.value) {
+            return;
+        }
+
+        const userName = selected.dataset.name || '';
+        const userEmail = selected.dataset.email || '';
+        const userPhone = selected.dataset.phone || '';
+        const nameParts = splitNameParts(userName);
+
+        if (!firstNameInput.value.trim()) {
+            firstNameInput.value = nameParts.first;
+        }
+        if (!middleNameInput.value.trim()) {
+            middleNameInput.value = nameParts.middle;
+        }
+        if (!lastNameInput.value.trim()) {
+            lastNameInput.value = nameParts.last;
+        }
+        if (!emailInput.value.trim()) {
+            emailInput.value = userEmail;
+        }
+        if (!phoneInput.value.trim()) {
+            phoneInput.value = userPhone;
+        }
+    }
+
+    if (userSelect) {
+        userSelect.addEventListener('change', applySelectedUserToForm);
+        applySelectedUserToForm();
+    }
+
     const form = document.querySelector('form[data-category-form="sections"]');
     if (!form) {
         return;
@@ -585,6 +647,8 @@
     form.addEventListener('submit', (event) => {
         const invalidField = form.querySelector(':invalid');
         if (!invalidField) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Saving Farmer...';
             return;
         }
 
@@ -601,6 +665,175 @@
     });
 
     updateStepView();
+})();
+</script>
+
+<script>
+(() => {
+    const regionSelect = document.getElementById('farmer_region');
+    const provinceSelect = document.getElementById('farmer_province');
+    const municipalitySelect = document.getElementById('farmer_municipality');
+    const barangaySelect = document.getElementById('farmer_barangay');
+
+    if (!regionSelect || !provinceSelect || !municipalitySelect || !barangaySelect) {
+        return;
+    }
+
+    // Initialize regions on page load
+    async function initializeRegions() {
+        try {
+            const response = await fetch("{{ route('admin.api.locations.regions') }}");
+            const regions = await response.json();
+            regionSelect.innerHTML = '<option value="">Select Region</option>';
+            regions.forEach(region => {
+                const option = document.createElement('option');
+                // value = name (stored in DB); data-code = PSGC region_id (used for API lookup)
+                option.value = region.name;
+                option.dataset.code = region.code;
+                option.textContent = region.name;
+                if (region.name === "{{ old('region') }}") {
+                    option.selected = true;
+                }
+                regionSelect.appendChild(option);
+            });
+
+            // If editing and region is pre-selected, load provinces
+            if ("{{ old('region') }}") {
+                const sel = regionSelect.querySelector('option:checked');
+                if (sel && sel.dataset.code) {
+                    loadProvinces(sel.dataset.code);
+                }
+            }
+        } catch (error) {
+            console.error('Error loading regions:', error);
+        }
+    }
+
+    async function loadProvinces(regionCode) {
+        try {
+            municipalitySelect.innerHTML = '<option value="">Select Municipality/City</option>';
+            municipalitySelect.disabled = true;
+            barangaySelect.innerHTML = '<option value="">Select Barangay</option>';
+            barangaySelect.disabled = true;
+
+            if (!regionCode) {
+                provinceSelect.innerHTML = '<option value="">Select Province</option>';
+                provinceSelect.disabled = true;
+                return;
+            }
+
+            const response = await fetch("{{ route('admin.api.locations.provinces') }}?region_code=" + encodeURIComponent(regionCode));
+            const provinces = await response.json();
+            provinceSelect.innerHTML = '<option value="">Select Province</option>';
+            provinceSelect.disabled = false;
+            provinces.forEach(province => {
+                const option = document.createElement('option');
+                // value = name (stored in DB); data-code = PSGC province_id (used for API lookup)
+                option.value = province.name;
+                option.dataset.code = province.code;
+                option.textContent = province.name;
+                if (province.name === "{{ old('province') }}") {
+                    option.selected = true;
+                }
+                provinceSelect.appendChild(option);
+            });
+
+            // If editing and province is pre-selected, load municipalities
+            if ("{{ old('province') }}") {
+                const sel = provinceSelect.querySelector('option:checked');
+                if (sel && sel.dataset.code) {
+                    loadMunicipalities(sel.dataset.code);
+                }
+            }
+        } catch (error) {
+            console.error('Error loading provinces:', error);
+        }
+    }
+
+    async function loadMunicipalities(provinceCode) {
+        try {
+            barangaySelect.innerHTML = '<option value="">Select Barangay</option>';
+            barangaySelect.disabled = true;
+
+            if (!provinceCode) {
+                municipalitySelect.innerHTML = '<option value="">Select Municipality/City</option>';
+                municipalitySelect.disabled = true;
+                return;
+            }
+
+            const response = await fetch("{{ route('admin.api.locations.municipalities') }}?province_code=" + encodeURIComponent(provinceCode));
+            const municipalities = await response.json();
+            municipalitySelect.innerHTML = '<option value="">Select Municipality/City</option>';
+            municipalitySelect.disabled = false;
+            municipalities.forEach(municipality => {
+                const option = document.createElement('option');
+                // value = name (stored in DB); data-code = PSGC city_id (used for API lookup)
+                option.value = municipality.name;
+                option.dataset.code = municipality.code;
+                option.textContent = municipality.name;
+                if (municipality.name === "{{ old('municipality_city') }}") {
+                    option.selected = true;
+                }
+                municipalitySelect.appendChild(option);
+            });
+
+            // If editing and municipality is pre-selected, load barangays
+            if ("{{ old('municipality_city') }}") {
+                const sel = municipalitySelect.querySelector('option:checked');
+                if (sel && sel.dataset.code) {
+                    loadBarangays(sel.dataset.code);
+                }
+            }
+        } catch (error) {
+            console.error('Error loading municipalities:', error);
+        }
+    }
+
+    async function loadBarangays(municipalityCode) {
+        try {
+            if (!municipalityCode) {
+                barangaySelect.innerHTML = '<option value="">Select Barangay</option>';
+                barangaySelect.disabled = true;
+                return;
+            }
+
+            const response = await fetch("{{ route('admin.api.locations.barangays') }}?municipality_code=" + encodeURIComponent(municipalityCode));
+            const barangays = await response.json();
+            barangaySelect.innerHTML = '<option value="">Select Barangay</option>';
+            barangaySelect.disabled = false;
+            barangays.forEach(barangay => {
+                const option = document.createElement('option');
+                // value = name (stored in DB)
+                option.value = barangay.name;
+                option.textContent = barangay.name;
+                if (barangay.name === "{{ old('barangay') }}") {
+                    option.selected = true;
+                }
+                barangaySelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Error loading barangays:', error);
+        }
+    }
+
+    // Event listeners
+    regionSelect.addEventListener('change', (e) => {
+        const sel = e.target.options[e.target.selectedIndex];
+        loadProvinces(sel ? sel.dataset.code : '');
+    });
+
+    provinceSelect.addEventListener('change', (e) => {
+        const sel = e.target.options[e.target.selectedIndex];
+        loadMunicipalities(sel ? sel.dataset.code : '');
+    });
+
+    municipalitySelect.addEventListener('change', (e) => {
+        const sel = e.target.options[e.target.selectedIndex];
+        loadBarangays(sel ? sel.dataset.code : '');
+    });
+
+    // Initialize on page load
+    initializeRegions();
 })();
 </script>
 
