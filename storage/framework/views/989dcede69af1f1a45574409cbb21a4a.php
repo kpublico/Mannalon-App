@@ -286,4 +286,4 @@
     </script>
 </body>
 </html>
-<?php /**PATH C:\xampp\htdocs\Mannalon_App\resources\views/auth/login.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\jayso\Desktop\dev\web\Mannalon-App\resources\views/auth/login.blade.php ENDPATH**/ ?>
