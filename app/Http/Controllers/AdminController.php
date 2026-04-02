@@ -1156,4 +1156,60 @@ class AdminController extends Controller
         }
         return view('admin.settings');
     }
+
+    /**
+     * API endpoint to get all Philippine regions
+     */
+    public function getRegions()
+    {
+        return response()->json(\App\Services\PhilippineLocationService::getRegions());
+    }
+
+    /**
+     * API endpoint to get provinces by region code
+     */
+    public function getProvincesByRegion(Request $request)
+    {
+        $regionCode = $request->query('region_code');
+        if (!$regionCode) {
+            return response()->json(['error' => 'Region code is required'], 422);
+        }
+        return response()->json(\App\Services\PhilippineLocationService::getProvincesByRegion($regionCode));
+    }
+
+    /**
+     * API endpoint to get municipalities by province code
+     */
+    public function getMunicipalitiesByProvince(Request $request)
+    {
+        $provinceCode = $request->query('province_code');
+        if (!$provinceCode) {
+            return response()->json(['error' => 'Province code is required'], 422);
+        }
+        return response()->json(\App\Services\PhilippineLocationService::getMunicipalitiesByProvince($provinceCode));
+    }
+
+    /**
+     * API endpoint to get barangays by municipality code
+     */
+    public function getBarangaysByMunicipality(Request $request)
+    {
+        $municipalityCode = $request->query('municipality_code');
+        if (!$municipalityCode) {
+            return response()->json(['error' => 'Municipality code is required'], 422);
+        }
+        return response()->json(\App\Services\PhilippineLocationService::getBarangaysByMunicipality($municipalityCode));
+    }
+
+    /**
+     * API endpoint to get sitios by barangay code
+     */
+    public function getSitiosByBarangay(Request $request)
+    {
+        $barangayCode = $request->query('barangay_code');
+        if (!$barangayCode) {
+            return response()->json(['error' => 'Barangay code is required'], 422);
+        }
+        return response()->json(\App\Services\PhilippineLocationService::getSitiosByBarangay($barangayCode));
+    }
 }

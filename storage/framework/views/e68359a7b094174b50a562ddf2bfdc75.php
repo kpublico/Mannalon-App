@@ -139,25 +139,25 @@
         }
     </style>
 
-    @if($errors->any())
+    <?php if($errors->any()): ?>
         <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg">
             <p class="font-semibold mb-2">Please fix the following errors:</p>
             <ul class="list-disc pl-6 text-sm space-y-1">
-                @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
+                <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <li><?php echo e($error); ?></li>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </ul>
         </div>
-    @endif
+    <?php endif; ?>
 
-    @if(session('success'))
-        <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-3 rounded-lg">{{ session('success') }}</div>
-    @endif
+    <?php if(session('success')): ?>
+        <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-3 rounded-lg"><?php echo e(session('success')); ?></div>
+    <?php endif; ?>
 
     <div class="bg-white rounded-lg shadow-md p-6">
         <h3 class="text-lg font-bold text-gray-900 mb-4">Add Comprehensive Farmer Information</h3>
-        <form method="POST" action="{{ route('admin.farmers.store') }}" enctype="multipart/form-data" class="space-y-6" data-category-form="sections">
-            @csrf
+        <form method="POST" action="<?php echo e(route('admin.farmers.store')); ?>" enctype="multipart/form-data" class="space-y-6" data-category-form="sections">
+            <?php echo csrf_field(); ?>
 
             <div class="farmer-dashboard-grid">
 
@@ -168,43 +168,43 @@
                         <label class="block text-sm font-semibold text-gray-700 mb-1">Select Registered Farmer Account</label>
                         <select name="user_id" id="registered_farmer_user_id" class="px-4 py-2 border border-gray-300 rounded-lg w-full" required>
                             <option value="">Choose a registered farmer account</option>
-                            @foreach(($registeredFarmerUsers ?? collect()) as $registeredUser)
+                            <?php $__currentLoopData = ($registeredFarmerUsers ?? collect()); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $registeredUser): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <option
-                                    value="{{ $registeredUser->id }}"
-                                    data-name="{{ $registeredUser->name }}"
-                                    data-email="{{ $registeredUser->email }}"
-                                    data-phone="{{ $registeredUser->phone }}"
-                                    @selected((string) old('user_id') === (string) $registeredUser->id)
+                                    value="<?php echo e($registeredUser->id); ?>"
+                                    data-name="<?php echo e($registeredUser->name); ?>"
+                                    data-email="<?php echo e($registeredUser->email); ?>"
+                                    data-phone="<?php echo e($registeredUser->phone); ?>"
+                                    <?php if((string) old('user_id') === (string) $registeredUser->id): echo 'selected'; endif; ?>
                                 >
-                                    #{{ $registeredUser->id }} - {{ $registeredUser->name }} ({{ $registeredUser->email }})
+                                    #<?php echo e($registeredUser->id); ?> - <?php echo e($registeredUser->name); ?> (<?php echo e($registeredUser->email); ?>)
                                 </option>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </select>
                         <p class="text-xs text-gray-500 mt-1">Only farmer accounts without an existing farmer profile are listed.</p>
                     </div>
-                    <input type="text" name="first_name" placeholder="First name" value="{{ old('first_name') }}" class="px-4 py-2 border border-gray-300 rounded-lg" required>
-                    <input type="text" name="middle_name" placeholder="Middle name" value="{{ old('middle_name') }}" class="px-4 py-2 border border-gray-300 rounded-lg">
-                    <input type="text" name="last_name" placeholder="Last name" value="{{ old('last_name') }}" class="px-4 py-2 border border-gray-300 rounded-lg" required>
+                    <input type="text" name="first_name" placeholder="First name" value="<?php echo e(old('first_name')); ?>" class="px-4 py-2 border border-gray-300 rounded-lg" required>
+                    <input type="text" name="middle_name" placeholder="Middle name" value="<?php echo e(old('middle_name')); ?>" class="px-4 py-2 border border-gray-300 rounded-lg">
+                    <input type="text" name="last_name" placeholder="Last name" value="<?php echo e(old('last_name')); ?>" class="px-4 py-2 border border-gray-300 rounded-lg" required>
                     <select name="gender" class="px-4 py-2 border border-gray-300 rounded-lg">
                         <option value="">Gender</option>
-                        <option value="male" @selected(old('gender') === 'male')>Male</option>
-                        <option value="female" @selected(old('gender') === 'female')>Female</option>
-                        <option value="other" @selected(old('gender') === 'other')>Other</option>
+                        <option value="male" <?php if(old('gender') === 'male'): echo 'selected'; endif; ?>>Male</option>
+                        <option value="female" <?php if(old('gender') === 'female'): echo 'selected'; endif; ?>>Female</option>
+                        <option value="other" <?php if(old('gender') === 'other'): echo 'selected'; endif; ?>>Other</option>
                     </select>
-                    <input type="date" name="date_of_birth" value="{{ old('date_of_birth') }}" class="px-4 py-2 border border-gray-300 rounded-lg">
-                    <input type="number" name="age" min="1" max="120" placeholder="Age" value="{{ old('age') }}" class="px-4 py-2 border border-gray-300 rounded-lg">
+                    <input type="date" name="date_of_birth" value="<?php echo e(old('date_of_birth')); ?>" class="px-4 py-2 border border-gray-300 rounded-lg">
+                    <input type="number" name="age" min="1" max="120" placeholder="Age" value="<?php echo e(old('age')); ?>" class="px-4 py-2 border border-gray-300 rounded-lg">
                     <select name="civil_status" class="px-4 py-2 border border-gray-300 rounded-lg">
                         <option value="">Civil status</option>
-                        <option value="single" @selected(old('civil_status') === 'single')>Single</option>
-                        <option value="married" @selected(old('civil_status') === 'married')>Married</option>
-                        <option value="divorced" @selected(old('civil_status') === 'divorced')>Divorced</option>
-                        <option value="widowed" @selected(old('civil_status') === 'widowed')>Widowed</option>
-                        <option value="separated" @selected(old('civil_status') === 'separated')>Separated</option>
+                        <option value="single" <?php if(old('civil_status') === 'single'): echo 'selected'; endif; ?>>Single</option>
+                        <option value="married" <?php if(old('civil_status') === 'married'): echo 'selected'; endif; ?>>Married</option>
+                        <option value="divorced" <?php if(old('civil_status') === 'divorced'): echo 'selected'; endif; ?>>Divorced</option>
+                        <option value="widowed" <?php if(old('civil_status') === 'widowed'): echo 'selected'; endif; ?>>Widowed</option>
+                        <option value="separated" <?php if(old('civil_status') === 'separated'): echo 'selected'; endif; ?>>Separated</option>
                     </select>
-                    <input type="text" name="phone" placeholder="Contact number" value="{{ old('phone') }}" class="px-4 py-2 border border-gray-300 rounded-lg">
-                    <input type="email" name="email" placeholder="Email (optional)" value="{{ old('email') }}" class="px-4 py-2 border border-gray-300 rounded-lg">
-                    <input type="text" name="government_id_type" placeholder="Government ID type" value="{{ old('government_id_type') }}" class="px-4 py-2 border border-gray-300 rounded-lg">
-                    <input type="text" name="government_id_number" placeholder="Government ID number" value="{{ old('government_id_number') }}" class="px-4 py-2 border border-gray-300 rounded-lg md:col-span-2">
+                    <input type="text" name="phone" placeholder="Contact number" value="<?php echo e(old('phone')); ?>" class="px-4 py-2 border border-gray-300 rounded-lg">
+                    <input type="email" name="email" placeholder="Email (optional)" value="<?php echo e(old('email')); ?>" class="px-4 py-2 border border-gray-300 rounded-lg">
+                    <input type="text" name="government_id_type" placeholder="Government ID type" value="<?php echo e(old('government_id_type')); ?>" class="px-4 py-2 border border-gray-300 rounded-lg">
+                    <input type="text" name="government_id_number" placeholder="Government ID number" value="<?php echo e(old('government_id_number')); ?>" class="px-4 py-2 border border-gray-300 rounded-lg md:col-span-2">
                 </div>
             </section>
 
@@ -252,39 +252,39 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <select name="farmer_type" class="px-4 py-2 border border-gray-300 rounded-lg">
                         <option value="">Type of farmer</option>
-                        <option value="owner" @selected(old('farmer_type') === 'owner')>Owner</option>
-                        <option value="tenant" @selected(old('farmer_type') === 'tenant')>Tenant</option>
-                        <option value="farm_worker" @selected(old('farmer_type') === 'farm_worker')>Farm Worker</option>
+                        <option value="owner" <?php if(old('farmer_type') === 'owner'): echo 'selected'; endif; ?>>Owner</option>
+                        <option value="tenant" <?php if(old('farmer_type') === 'tenant'): echo 'selected'; endif; ?>>Tenant</option>
+                        <option value="farm_worker" <?php if(old('farmer_type') === 'farm_worker'): echo 'selected'; endif; ?>>Farm Worker</option>
                     </select>
-                    <input type="number" name="years_in_farming" min="0" max="80" placeholder="Years in farming" value="{{ old('years_in_farming') }}" class="px-4 py-2 border border-gray-300 rounded-lg">
-                    <input type="text" name="primary_occupation" placeholder="Primary occupation" value="{{ old('primary_occupation') }}" class="px-4 py-2 border border-gray-300 rounded-lg">
-                    <input type="text" name="secondary_occupation" placeholder="Secondary occupation" value="{{ old('secondary_occupation') }}" class="px-4 py-2 border border-gray-300 rounded-lg">
+                    <input type="number" name="years_in_farming" min="0" max="80" placeholder="Years in farming" value="<?php echo e(old('years_in_farming')); ?>" class="px-4 py-2 border border-gray-300 rounded-lg">
+                    <input type="text" name="primary_occupation" placeholder="Primary occupation" value="<?php echo e(old('primary_occupation')); ?>" class="px-4 py-2 border border-gray-300 rounded-lg">
+                    <input type="text" name="secondary_occupation" placeholder="Secondary occupation" value="<?php echo e(old('secondary_occupation')); ?>" class="px-4 py-2 border border-gray-300 rounded-lg">
                     <label class="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg">
-                        <input type="checkbox" name="is_association_member" value="1" @checked(old('is_association_member'))>
+                        <input type="checkbox" name="is_association_member" value="1" <?php if(old('is_association_member')): echo 'checked'; endif; ?>>
                         <span>Association member</span>
                     </label>
-                    <input type="text" name="association_name" placeholder="Association/Cooperative name" value="{{ old('association_name') }}" class="px-4 py-2 border border-gray-300 rounded-lg">
+                    <input type="text" name="association_name" placeholder="Association/Cooperative name" value="<?php echo e(old('association_name')); ?>" class="px-4 py-2 border border-gray-300 rounded-lg">
                 </div>
             </section>
 
             <section class="profile-card card-order-5">
                 <h4 class="font-semibold text-gray-900 mb-3">5. Farm Information - Land Assets</h4>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <input type="text" name="farm_location" placeholder="Farm location" value="{{ old('farm_location') }}" class="px-4 py-2 border border-gray-300 rounded-lg">
-                    <input type="number" step="0.01" min="0" name="farm_size_hectares" placeholder="Farm size (hectares)" value="{{ old('farm_size_hectares') }}" class="px-4 py-2 border border-gray-300 rounded-lg">
+                    <input type="text" name="farm_location" placeholder="Farm location" value="<?php echo e(old('farm_location')); ?>" class="px-4 py-2 border border-gray-300 rounded-lg">
+                    <input type="number" step="0.01" min="0" name="farm_size_hectares" placeholder="Farm size (hectares)" value="<?php echo e(old('farm_size_hectares')); ?>" class="px-4 py-2 border border-gray-300 rounded-lg">
                     <select name="land_ownership_type" class="px-4 py-2 border border-gray-300 rounded-lg">
                         <option value="">Land ownership</option>
-                        <option value="owned" @selected(old('land_ownership_type') === 'owned')>Owned</option>
-                        <option value="leased" @selected(old('land_ownership_type') === 'leased')>Leased</option>
-                        <option value="shared" @selected(old('land_ownership_type') === 'shared')>Shared</option>
+                        <option value="owned" <?php if(old('land_ownership_type') === 'owned'): echo 'selected'; endif; ?>>Owned</option>
+                        <option value="leased" <?php if(old('land_ownership_type') === 'leased'): echo 'selected'; endif; ?>>Leased</option>
+                        <option value="shared" <?php if(old('land_ownership_type') === 'shared'): echo 'selected'; endif; ?>>Shared</option>
                     </select>
-                    <input type="number" min="0" name="number_of_parcels" placeholder="Number of parcels" value="{{ old('number_of_parcels') }}" class="px-4 py-2 border border-gray-300 rounded-lg">
-                    <input type="number" step="0.00000001" name="gps_latitude" placeholder="Farm GPS latitude" value="{{ old('gps_latitude') }}" class="px-4 py-2 border border-gray-300 rounded-lg">
-                    <input type="number" step="0.00000001" name="gps_longitude" placeholder="Farm GPS longitude" value="{{ old('gps_longitude') }}" class="px-4 py-2 border border-gray-300 rounded-lg">
+                    <input type="number" min="0" name="number_of_parcels" placeholder="Number of parcels" value="<?php echo e(old('number_of_parcels')); ?>" class="px-4 py-2 border border-gray-300 rounded-lg">
+                    <input type="number" step="0.00000001" name="gps_latitude" placeholder="Farm GPS latitude" value="<?php echo e(old('gps_latitude')); ?>" class="px-4 py-2 border border-gray-300 rounded-lg">
+                    <input type="number" step="0.00000001" name="gps_longitude" placeholder="Farm GPS longitude" value="<?php echo e(old('gps_longitude')); ?>" class="px-4 py-2 border border-gray-300 rounded-lg">
                 </div>
                 <div class="mt-4">
                     <p class="text-sm font-semibold text-gray-800 mb-2">Farm Land Boundary Points (Click map to add corner points)</p>
-                    <input type="hidden" id="land_boundary_points" name="land_boundary_points" value="{{ old('land_boundary_points') }}">
+                    <input type="hidden" id="land_boundary_points" name="land_boundary_points" value="<?php echo e(old('land_boundary_points')); ?>">
                     <div class="boundary-toolbar">
                         <button type="button" id="boundary-undo" class="boundary-btn boundary-btn-undo">Undo Last Point</button>
                         <button type="button" id="boundary-clear" class="boundary-btn boundary-btn-clear">Clear Points</button>
@@ -297,57 +297,57 @@
             <section class="profile-card card-order-7">
                 <h4 class="font-semibold text-gray-900 mb-3">7. Crop and Livestock Information - Current Production</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <textarea name="crop_types" rows="2" placeholder="Type of crops (e.g. Rice, Corn)" class="px-4 py-2 border border-gray-300 rounded-lg">{{ old('crop_types') }}</textarea>
-                    <textarea name="crop_area_per_type" rows="2" placeholder="Area per crop" class="px-4 py-2 border border-gray-300 rounded-lg">{{ old('crop_area_per_type') }}</textarea>
+                    <textarea name="crop_types" rows="2" placeholder="Type of crops (e.g. Rice, Corn)" class="px-4 py-2 border border-gray-300 rounded-lg"><?php echo e(old('crop_types')); ?></textarea>
+                    <textarea name="crop_area_per_type" rows="2" placeholder="Area per crop" class="px-4 py-2 border border-gray-300 rounded-lg"><?php echo e(old('crop_area_per_type')); ?></textarea>
                     <select name="cropping_season" class="px-4 py-2 border border-gray-300 rounded-lg">
                         <option value="">Cropping season</option>
-                        <option value="wet" @selected(old('cropping_season') === 'wet')>Wet</option>
-                        <option value="dry" @selected(old('cropping_season') === 'dry')>Dry</option>
-                        <option value="wet_dry" @selected(old('cropping_season') === 'wet_dry')>Wet/Dry</option>
+                        <option value="wet" <?php if(old('cropping_season') === 'wet'): echo 'selected'; endif; ?>>Wet</option>
+                        <option value="dry" <?php if(old('cropping_season') === 'dry'): echo 'selected'; endif; ?>>Dry</option>
+                        <option value="wet_dry" <?php if(old('cropping_season') === 'wet_dry'): echo 'selected'; endif; ?>>Wet/Dry</option>
                     </select>
-                    <input type="text" name="yield_per_harvest" placeholder="Yield per harvest" value="{{ old('yield_per_harvest') }}" class="px-4 py-2 border border-gray-300 rounded-lg">
-                    <textarea name="livestock_types" rows="2" placeholder="Livestock/Poultry types" class="px-4 py-2 border border-gray-300 rounded-lg">{{ old('livestock_types') }}</textarea>
-                    <input type="number" min="0" name="livestock_count" placeholder="Number of animals" value="{{ old('livestock_count') }}" class="px-4 py-2 border border-gray-300 rounded-lg">
+                    <input type="text" name="yield_per_harvest" placeholder="Yield per harvest" value="<?php echo e(old('yield_per_harvest')); ?>" class="px-4 py-2 border border-gray-300 rounded-lg">
+                    <textarea name="livestock_types" rows="2" placeholder="Livestock/Poultry types" class="px-4 py-2 border border-gray-300 rounded-lg"><?php echo e(old('livestock_types')); ?></textarea>
+                    <input type="number" min="0" name="livestock_count" placeholder="Number of animals" value="<?php echo e(old('livestock_count')); ?>" class="px-4 py-2 border border-gray-300 rounded-lg">
                 </div>
             </section>
 
             <section class="profile-card card-order-6">
                 <h4 class="font-semibold text-gray-900 mb-3">6. Farming Resources and Equipment - Tools and Irrigation</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <textarea name="farm_equipment" rows="2" placeholder="Farm equipment" class="px-4 py-2 border border-gray-300 rounded-lg">{{ old('farm_equipment') }}</textarea>
+                    <textarea name="farm_equipment" rows="2" placeholder="Farm equipment" class="px-4 py-2 border border-gray-300 rounded-lg"><?php echo e(old('farm_equipment')); ?></textarea>
                     <select name="irrigation_type" class="px-4 py-2 border border-gray-300 rounded-lg">
                         <option value="">Irrigation type</option>
-                        <option value="rainfed" @selected(old('irrigation_type') === 'rainfed')>Rainfed</option>
-                        <option value="irrigated" @selected(old('irrigation_type') === 'irrigated')>Irrigated</option>
-                        <option value="mixed" @selected(old('irrigation_type') === 'mixed')>Mixed</option>
+                        <option value="rainfed" <?php if(old('irrigation_type') === 'rainfed'): echo 'selected'; endif; ?>>Rainfed</option>
+                        <option value="irrigated" <?php if(old('irrigation_type') === 'irrigated'): echo 'selected'; endif; ?>>Irrigated</option>
+                        <option value="mixed" <?php if(old('irrigation_type') === 'mixed'): echo 'selected'; endif; ?>>Mixed</option>
                     </select>
-                    <input type="text" name="water_source" placeholder="Source of water" value="{{ old('water_source') }}" class="px-4 py-2 border border-gray-300 rounded-lg">
+                    <input type="text" name="water_source" placeholder="Source of water" value="<?php echo e(old('water_source')); ?>" class="px-4 py-2 border border-gray-300 rounded-lg">
                     <select name="fertilizer_usage" class="px-4 py-2 border border-gray-300 rounded-lg">
                         <option value="">Fertilizer usage</option>
-                        <option value="organic" @selected(old('fertilizer_usage') === 'organic')>Organic</option>
-                        <option value="inorganic" @selected(old('fertilizer_usage') === 'inorganic')>Inorganic</option>
-                        <option value="mixed" @selected(old('fertilizer_usage') === 'mixed')>Mixed</option>
+                        <option value="organic" <?php if(old('fertilizer_usage') === 'organic'): echo 'selected'; endif; ?>>Organic</option>
+                        <option value="inorganic" <?php if(old('fertilizer_usage') === 'inorganic'): echo 'selected'; endif; ?>>Inorganic</option>
+                        <option value="mixed" <?php if(old('fertilizer_usage') === 'mixed'): echo 'selected'; endif; ?>>Mixed</option>
                     </select>
-                    <textarea name="pesticide_usage" rows="2" placeholder="Pesticide usage" class="px-4 py-2 border border-gray-300 rounded-lg md:col-span-2">{{ old('pesticide_usage') }}</textarea>
+                    <textarea name="pesticide_usage" rows="2" placeholder="Pesticide usage" class="px-4 py-2 border border-gray-300 rounded-lg md:col-span-2"><?php echo e(old('pesticide_usage')); ?></textarea>
                 </div>
             </section>
 
             <section class="profile-card card-order-8">
                 <h4 class="font-semibold text-gray-900 mb-3">8. Financial Information - Economic Status</h4>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <input type="number" step="0.01" min="0" name="average_monthly_income" placeholder="Average monthly income" value="{{ old('average_monthly_income') }}" class="px-4 py-2 border border-gray-300 rounded-lg">
-                    <input type="number" step="0.01" min="0" name="average_annual_income" placeholder="Average annual income" value="{{ old('average_annual_income') }}" class="px-4 py-2 border border-gray-300 rounded-lg">
+                    <input type="number" step="0.01" min="0" name="average_monthly_income" placeholder="Average monthly income" value="<?php echo e(old('average_monthly_income')); ?>" class="px-4 py-2 border border-gray-300 rounded-lg">
+                    <input type="number" step="0.01" min="0" name="average_annual_income" placeholder="Average annual income" value="<?php echo e(old('average_annual_income')); ?>" class="px-4 py-2 border border-gray-300 rounded-lg">
                     <select name="income_source" class="px-4 py-2 border border-gray-300 rounded-lg">
                         <option value="">Income source</option>
-                        <option value="farm" @selected(old('income_source') === 'farm')>Farm</option>
-                        <option value="non_farm" @selected(old('income_source') === 'non_farm')>Non-Farm</option>
-                        <option value="both" @selected(old('income_source') === 'both')>Both</option>
+                        <option value="farm" <?php if(old('income_source') === 'farm'): echo 'selected'; endif; ?>>Farm</option>
+                        <option value="non_farm" <?php if(old('income_source') === 'non_farm'): echo 'selected'; endif; ?>>Non-Farm</option>
+                        <option value="both" <?php if(old('income_source') === 'both'): echo 'selected'; endif; ?>>Both</option>
                     </select>
                     <label class="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg">
-                        <input type="checkbox" name="has_credit_access" value="1" @checked(old('has_credit_access'))>
+                        <input type="checkbox" name="has_credit_access" value="1" <?php if(old('has_credit_access')): echo 'checked'; endif; ?>>
                         <span>Access to credit/loans</span>
                     </label>
-                    <input type="text" name="insurance_coverage" placeholder="Insurance coverage (e.g. PCIC)" value="{{ old('insurance_coverage') }}" class="px-4 py-2 border border-gray-300 rounded-lg md:col-span-2">
+                    <input type="text" name="insurance_coverage" placeholder="Insurance coverage (e.g. PCIC)" value="<?php echo e(old('insurance_coverage')); ?>" class="px-4 py-2 border border-gray-300 rounded-lg md:col-span-2">
                 </div>
             </section>
 
@@ -355,11 +355,11 @@
                 <h4 class="font-semibold text-gray-900 mb-3">9. Government Program Participation - Support History</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <label class="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg">
-                        <input type="checkbox" name="is_rsbsa_registered" value="1" @checked(old('is_rsbsa_registered'))>
+                        <input type="checkbox" name="is_rsbsa_registered" value="1" <?php if(old('is_rsbsa_registered')): echo 'checked'; endif; ?>>
                         <span>Registered in RSBSA</span>
                     </label>
-                    <input type="date" name="program_registration_date" value="{{ old('program_registration_date') }}" class="px-4 py-2 border border-gray-300 rounded-lg">
-                    <textarea name="programs_availed" rows="2" placeholder="Programs availed (seeds, fertilizer, training, equipment, etc.)" class="px-4 py-2 border border-gray-300 rounded-lg md:col-span-2">{{ old('programs_availed') }}</textarea>
+                    <input type="date" name="program_registration_date" value="<?php echo e(old('program_registration_date')); ?>" class="px-4 py-2 border border-gray-300 rounded-lg">
+                    <textarea name="programs_availed" rows="2" placeholder="Programs availed (seeds, fertilizer, training, equipment, etc.)" class="px-4 py-2 border border-gray-300 rounded-lg md:col-span-2"><?php echo e(old('programs_availed')); ?></textarea>
                 </div>
             </section>
 
@@ -391,11 +391,11 @@
                     <div class="px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-600">
                         Farmer ID and Date Registered are auto-generated by the system.
                     </div>
-                    <input type="text" name="verified_by" placeholder="Verified by (Admin name)" value="{{ old('verified_by') }}" class="px-4 py-2 border border-gray-300 rounded-lg">
+                    <input type="text" name="verified_by" placeholder="Verified by (Admin name)" value="<?php echo e(old('verified_by')); ?>" class="px-4 py-2 border border-gray-300 rounded-lg">
                     <select name="profile_status" class="px-4 py-2 border border-gray-300 rounded-lg">
-                        <option value="active" @selected(old('profile_status', 'active') === 'active')>Active</option>
-                        <option value="inactive" @selected(old('profile_status') === 'inactive')>Inactive</option>
-                        <option value="verified" @selected(old('profile_status') === 'verified')>Verified</option>
+                        <option value="active" <?php if(old('profile_status', 'active') === 'active'): echo 'selected'; endif; ?>>Active</option>
+                        <option value="inactive" <?php if(old('profile_status') === 'inactive'): echo 'selected'; endif; ?>>Inactive</option>
+                        <option value="verified" <?php if(old('profile_status') === 'verified'): echo 'selected'; endif; ?>>Verified</option>
                     </select>
                 </div>
             </section>
@@ -409,7 +409,7 @@
     <div class="bg-white rounded-lg shadow-md p-6 border border-emerald-100">
         <h4 class="text-lg font-semibold text-gray-900 mb-2">Farmer Data Display Location</h4>
         <p class="text-sm text-gray-600 mb-4">Farmer summary/list has been removed from this page. All farmer data display is now under Reports &amp; Analytics.</p>
-        <a href="javascript:void(0)" onclick="typeof loadAdminPage === 'function' ? loadAdminPage('reports-analytics', '{{ route('admin.reports-analytics') }}') : (window.location.href='{{ route('admin.reports-analytics') }}')" class="inline-flex items-center px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 font-semibold">
+        <a href="javascript:void(0)" onclick="typeof loadAdminPage === 'function' ? loadAdminPage('reports-analytics', '<?php echo e(route('admin.reports-analytics')); ?>') : (window.location.href='<?php echo e(route('admin.reports-analytics')); ?>')" class="inline-flex items-center px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 font-semibold">
             <i class="fas fa-chart-line mr-2"></i>Open Reports &amp; Analytics
         </a>
     </div>
@@ -685,22 +685,22 @@
     // Initialize regions on page load
     async function initializeRegions() {
         try {
-            const response = await fetch("{{ route('admin.api.locations.regions') }}");
+            const response = await fetch("<?php echo e(route('admin.api.locations.regions')); ?>");
             const regions = await response.json();
             regionSelect.innerHTML = '<option value="">Select Region</option>';
             regions.forEach(region => {
                 const option = document.createElement('option');
                 option.value = region.code;
                 option.textContent = region.name;
-                if (region.code === "{{ old('region') }}") {
+                if (region.code === "<?php echo e(old('region')); ?>") {
                     option.selected = true;
                 }
                 regionSelect.appendChild(option);
             });
             
             // If editing and region is pre-selected, load provinces
-            if ("{{ old('region') }}") {
-                loadProvinces("{{ old('region') }}");
+            if ("<?php echo e(old('region')); ?>") {
+                loadProvinces("<?php echo e(old('region')); ?>");
             }
         } catch (error) {
             console.error('Error loading regions:', error);
@@ -722,7 +722,7 @@
                 return;
             }
 
-            const response = await fetch("{{ route('admin.api.locations.provinces') }}?region_code=" + encodeURIComponent(regionCode));
+            const response = await fetch("<?php echo e(route('admin.api.locations.provinces')); ?>?region_code=" + encodeURIComponent(regionCode));
             const provinces = await response.json();
             provinceSelect.innerHTML = '<option value="">Select Province</option>';
             provinceSelect.disabled = false;
@@ -730,14 +730,14 @@
                 const option = document.createElement('option');
                 option.value = province.code;
                 option.textContent = province.name;
-                if (province.name === "{{ old('province') }}") {
+                if (province.name === "<?php echo e(old('province')); ?>") {
                     option.selected = true;
                 }
                 provinceSelect.appendChild(option);
             });
 
             // If editing and province is pre-selected, load municipalities
-            if ("{{ old('province') }}") {
+            if ("<?php echo e(old('province')); ?>") {
                 const selectedOption = provinceSelect.querySelector('option:checked');
                 if (selectedOption && selectedOption.value) {
                     loadMunicipalities(selectedOption.value);
@@ -761,7 +761,7 @@
                 return;
             }
 
-            const response = await fetch("{{ route('admin.api.locations.municipalities') }}?province_code=" + encodeURIComponent(provinceCode));
+            const response = await fetch("<?php echo e(route('admin.api.locations.municipalities')); ?>?province_code=" + encodeURIComponent(provinceCode));
             const municipalities = await response.json();
             municipalitySelect.innerHTML = '<option value="">Select Municipality/City</option>';
             municipalitySelect.disabled = false;
@@ -769,14 +769,14 @@
                 const option = document.createElement('option');
                 option.value = municipality.code;
                 option.textContent = municipality.name;
-                if (municipality.name === "{{ old('municipality_city') }}") {
+                if (municipality.name === "<?php echo e(old('municipality_city')); ?>") {
                     option.selected = true;
                 }
                 municipalitySelect.appendChild(option);
             });
 
             // If editing and municipality is pre-selected, load barangays
-            if ("{{ old('municipality_city') }}") {
+            if ("<?php echo e(old('municipality_city')); ?>") {
                 const selectedOption = municipalitySelect.querySelector('option:checked');
                 if (selectedOption && selectedOption.value) {
                     loadBarangays(selectedOption.value);
@@ -798,7 +798,7 @@
                 return;
             }
 
-            const response = await fetch("{{ route('admin.api.locations.barangays') }}?municipality_code=" + encodeURIComponent(municipalityCode));
+            const response = await fetch("<?php echo e(route('admin.api.locations.barangays')); ?>?municipality_code=" + encodeURIComponent(municipalityCode));
             const barangays = await response.json();
             barangaySelect.innerHTML = '<option value="">Select Barangay</option>';
             barangaySelect.disabled = false;
@@ -806,14 +806,14 @@
                 const option = document.createElement('option');
                 option.value = barangay.code;
                 option.textContent = barangay.name;
-                if (barangay.name === "{{ old('barangay') }}") {
+                if (barangay.name === "<?php echo e(old('barangay')); ?>") {
                     option.selected = true;
                 }
                 barangaySelect.appendChild(option);
             });
 
             // If editing and barangay is pre-selected, load sitios
-            if ("{{ old('barangay') }}") {
+            if ("<?php echo e(old('barangay')); ?>") {
                 const selectedOption = barangaySelect.querySelector('option:checked');
                 if (selectedOption && selectedOption.value) {
                     loadSitios(selectedOption.value);
@@ -832,7 +832,7 @@
                 return;
             }
 
-            const response = await fetch("{{ route('admin.api.locations.sitios') }}?barangay_code=" + encodeURIComponent(barangayCode));
+            const response = await fetch("<?php echo e(route('admin.api.locations.sitios')); ?>?barangay_code=" + encodeURIComponent(barangayCode));
             const sitios = await response.json();
             sitioSelect.innerHTML = '<option value="">Select Sitio/Purok</option>';
             sitioSelect.disabled = false;
@@ -840,7 +840,7 @@
                 const option = document.createElement('option');
                 option.value = sitio.code;
                 option.textContent = sitio.name;
-                if (sitio.name === "{{ old('sitio_purok') }}") {
+                if (sitio.name === "<?php echo e(old('sitio_purok')); ?>") {
                     option.selected = true;
                 }
                 sitioSelect.appendChild(option);
@@ -936,7 +936,7 @@
     const countEl = document.getElementById('boundary-count');
     const undoBtn = document.getElementById('boundary-undo');
     const clearBtn = document.getElementById('boundary-clear');
-    const googleMapsApiKey = @json(config('services.google_maps.key'));
+    const googleMapsApiKey = <?php echo json_encode(config('services.google_maps.key'), 15, 512) ?>;
 
     if (!mapEl || !pointsInput || !latInput || !lngInput || !countEl || !undoBtn || !clearBtn) {
         return;
@@ -1420,3 +1420,4 @@
 
     </div>
     </main>
+<?php /**PATH C:\Users\jayso\Desktop\dev\web\Mannalon-App\resources\views/admin/farmers-content.blade.php ENDPATH**/ ?>

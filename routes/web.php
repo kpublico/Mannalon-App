@@ -96,6 +96,13 @@ Route::middleware('auth')->group(function () {
         Route::get('/admin/farmers/{id}', [AdminController::class, 'farmerDetails'])->name('admin.farmers.show');
         Route::put('/admin/farmers/{id}/status', [AdminController::class, 'updateFarmerStatus'])->name('admin.farmers.status');
         
+        // Location API Endpoints
+        Route::get('/admin/api/locations/regions', [AdminController::class, 'getRegions'])->name('admin.api.locations.regions');
+        Route::get('/admin/api/locations/provinces', [AdminController::class, 'getProvincesByRegion'])->name('admin.api.locations.provinces');
+        Route::get('/admin/api/locations/municipalities', [AdminController::class, 'getMunicipalitiesByProvince'])->name('admin.api.locations.municipalities');
+        Route::get('/admin/api/locations/barangays', [AdminController::class, 'getBarangaysByMunicipality'])->name('admin.api.locations.barangays');
+        Route::get('/admin/api/locations/sitios', [AdminController::class, 'getSitiosByBarangay'])->name('admin.api.locations.sitios');
+        
         // Content Management (Announcements, Guides, Weather, Market Prices)
         Route::get('/admin/announcements', [AdminController::class, 'announcementsIndex'])->name('admin.announcements.index');
         Route::get('/admin/announcements/create', [AdminController::class, 'announcementsCreate'])->name('admin.announcements.create');
