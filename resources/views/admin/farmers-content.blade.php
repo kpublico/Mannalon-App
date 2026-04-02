@@ -237,9 +237,7 @@
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-1">Sitio/Purok</label>
-                        <select name="sitio_purok" id="farmer_sitio" class="px-4 py-2 border border-gray-300 rounded-lg w-full" disabled>
-                            <option value="">Select Sitio/Purok</option>
-                        </select>
+                        <input type="text" name="sitio_purok" id="farmer_sitio" placeholder="Enter Sitio/Purok" value="{{ old('sitio_purok') }}" class="px-4 py-2 border border-gray-300 rounded-lg w-full">
                     </div>
                     <div class="px-4 py-2 bg-emerald-50 border border-emerald-200 rounded-lg text-xs text-emerald-800">
                         GPS coordinates are managed in Farm Information map card.
@@ -676,9 +674,8 @@
     const provinceSelect = document.getElementById('farmer_province');
     const municipalitySelect = document.getElementById('farmer_municipality');
     const barangaySelect = document.getElementById('farmer_barangay');
-    const sitioSelect = document.getElementById('farmer_sitio');
 
-    if (!regionSelect || !provinceSelect || !municipalitySelect || !barangaySelect || !sitioSelect) {
+    if (!regionSelect || !provinceSelect || !municipalitySelect || !barangaySelect) {
         return;
     }
 
@@ -690,17 +687,22 @@
             regionSelect.innerHTML = '<option value="">Select Region</option>';
             regions.forEach(region => {
                 const option = document.createElement('option');
-                option.value = region.code;
+                // value = name (stored in DB); data-code = PSGC region_id (used for API lookup)
+                option.value = region.name;
+                option.dataset.code = region.code;
                 option.textContent = region.name;
-                if (region.code === "{{ old('region') }}") {
+                if (region.name === "{{ old('region') }}") {
                     option.selected = true;
                 }
                 regionSelect.appendChild(option);
             });
-            
+
             // If editing and region is pre-selected, load provinces
             if ("{{ old('region') }}") {
-                loadProvinces("{{ old('region') }}");
+                const sel = regionSelect.querySelector('option:checked');
+                if (sel && sel.dataset.code) {
+                    loadProvinces(sel.dataset.code);
+                }
             }
         } catch (error) {
             console.error('Error loading regions:', error);
@@ -713,8 +715,6 @@
             municipalitySelect.disabled = true;
             barangaySelect.innerHTML = '<option value="">Select Barangay</option>';
             barangaySelect.disabled = true;
-            sitioSelect.innerHTML = '<option value="">Select Sitio/Purok</option>';
-            sitioSelect.disabled = true;
 
             if (!regionCode) {
                 provinceSelect.innerHTML = '<option value="">Select Province</option>';
@@ -728,7 +728,9 @@
             provinceSelect.disabled = false;
             provinces.forEach(province => {
                 const option = document.createElement('option');
-                option.value = province.code;
+                // value = name (stored in DB); data-code = PSGC province_id (used for API lookup)
+                option.value = province.name;
+                option.dataset.code = province.code;
                 option.textContent = province.name;
                 if (province.name === "{{ old('province') }}") {
                     option.selected = true;
@@ -738,9 +740,9 @@
 
             // If editing and province is pre-selected, load municipalities
             if ("{{ old('province') }}") {
-                const selectedOption = provinceSelect.querySelector('option:checked');
-                if (selectedOption && selectedOption.value) {
-                    loadMunicipalities(selectedOption.value);
+                const sel = provinceSelect.querySelector('option:checked');
+                if (sel && sel.dataset.code) {
+                    loadMunicipalities(sel.dataset.code);
                 }
             }
         } catch (error) {
@@ -752,8 +754,6 @@
         try {
             barangaySelect.innerHTML = '<option value="">Select Barangay</option>';
             barangaySelect.disabled = true;
-            sitioSelect.innerHTML = '<option value="">Select Sitio/Purok</option>';
-            sitioSelect.disabled = true;
 
             if (!provinceCode) {
                 municipalitySelect.innerHTML = '<option value="">Select Municipality/City</option>';
@@ -767,7 +767,9 @@
             municipalitySelect.disabled = false;
             municipalities.forEach(municipality => {
                 const option = document.createElement('option');
-                option.value = municipality.code;
+                // value = name (stored in DB); data-code = PSGC city_id (used for API lookup)
+                option.value = municipality.name;
+                option.dataset.code = municipality.code;
                 option.textContent = municipality.name;
                 if (municipality.name === "{{ old('municipality_city') }}") {
                     option.selected = true;
@@ -777,9 +779,9 @@
 
             // If editing and municipality is pre-selected, load barangays
             if ("{{ old('municipality_city') }}") {
-                const selectedOption = municipalitySelect.querySelector('option:checked');
-                if (selectedOption && selectedOption.value) {
-                    loadBarangays(selectedOption.value);
+                const sel = municipalitySelect.querySelector('option:checked');
+                if (sel && sel.dataset.code) {
+                    loadBarangays(sel.dataset.code);
                 }
             }
         } catch (error) {
@@ -789,9 +791,6 @@
 
     async function loadBarangays(municipalityCode) {
         try {
-            sitioSelect.innerHTML = '<option value="">Select Sitio/Purok</option>';
-            sitioSelect.disabled = true;
-
             if (!municipalityCode) {
                 barangaySelect.innerHTML = '<option value="">Select Barangay</option>';
                 barangaySelect.disabled = true;
@@ -804,67 +803,33 @@
             barangaySelect.disabled = false;
             barangays.forEach(barangay => {
                 const option = document.createElement('option');
-                option.value = barangay.code;
+                // value = name (stored in DB)
+                option.value = barangay.name;
                 option.textContent = barangay.name;
                 if (barangay.name === "{{ old('barangay') }}") {
                     option.selected = true;
                 }
                 barangaySelect.appendChild(option);
             });
-
-            // If editing and barangay is pre-selected, load sitios
-            if ("{{ old('barangay') }}") {
-                const selectedOption = barangaySelect.querySelector('option:checked');
-                if (selectedOption && selectedOption.value) {
-                    loadSitios(selectedOption.value);
-                }
-            }
         } catch (error) {
             console.error('Error loading barangays:', error);
         }
     }
 
-    async function loadSitios(barangayCode) {
-        try {
-            if (!barangayCode) {
-                sitioSelect.innerHTML = '<option value="">Select Sitio/Purok</option>';
-                sitioSelect.disabled = true;
-                return;
-            }
-
-            const response = await fetch("{{ route('admin.api.locations.sitios') }}?barangay_code=" + encodeURIComponent(barangayCode));
-            const sitios = await response.json();
-            sitioSelect.innerHTML = '<option value="">Select Sitio/Purok</option>';
-            sitioSelect.disabled = false;
-            sitios.forEach(sitio => {
-                const option = document.createElement('option');
-                option.value = sitio.code;
-                option.textContent = sitio.name;
-                if (sitio.name === "{{ old('sitio_purok') }}") {
-                    option.selected = true;
-                }
-                sitioSelect.appendChild(option);
-            });
-        } catch (error) {
-            console.error('Error loading sitios:', error);
-        }
-    }
-
     // Event listeners
     regionSelect.addEventListener('change', (e) => {
-        loadProvinces(e.target.value);
+        const sel = e.target.options[e.target.selectedIndex];
+        loadProvinces(sel ? sel.dataset.code : '');
     });
 
     provinceSelect.addEventListener('change', (e) => {
-        loadMunicipalities(e.target.value);
+        const sel = e.target.options[e.target.selectedIndex];
+        loadMunicipalities(sel ? sel.dataset.code : '');
     });
 
     municipalitySelect.addEventListener('change', (e) => {
-        loadBarangays(e.target.value);
-    });
-
-    barangaySelect.addEventListener('change', (e) => {
-        loadSitios(e.target.value);
+        const sel = e.target.options[e.target.selectedIndex];
+        loadBarangays(sel ? sel.dataset.code : '');
     });
 
     // Initialize on page load

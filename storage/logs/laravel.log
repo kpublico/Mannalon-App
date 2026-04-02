@@ -17309,3 +17309,28 @@ Did you mean one of these?
 #33 C:/Users/jayso/Desktop/dev/web/Mannalon-App/artisan(35): Illuminate/Foundation/Console/Kernel->handle()
 #34 {main}
 "} 
+[2026-04-02 13:01:46] local.ERROR: Class "AuthController" does not exist {"exception":"[object] (ReflectionException(code: -1): Class \"AuthController\" does not exist at /home/runner/work/Mannalon-App/Mannalon-App/vendor/laravel/framework/src/Illuminate/Foundation/Console/RouteListCommand.php:225)
+[stacktrace]
+#0 /home/runner/work/Mannalon-App/Mannalon-App/vendor/laravel/framework/src/Illuminate/Foundation/Console/RouteListCommand.php(225): ReflectionClass->__construct()
+#1 /home/runner/work/Mannalon-App/Mannalon-App/vendor/laravel/framework/src/Illuminate/Foundation/Console/RouteListCommand.php(147): Illuminate\\Foundation\\Console\\RouteListCommand->isVendorRoute()
+#2 /home/runner/work/Mannalon-App/Mannalon-App/vendor/laravel/framework/src/Illuminate/Foundation/Console/RouteListCommand.php(116): Illuminate\\Foundation\\Console\\RouteListCommand->getRouteInformation()
+#3 [internal function]: Illuminate\\Foundation\\Console\\RouteListCommand->Illuminate\\Foundation\\Console\\{closure}()
+#4 /home/runner/work/Mannalon-App/Mannalon-App/vendor/laravel/framework/src/Illuminate/Collections/Arr.php(600): array_map()
+#5 /home/runner/work/Mannalon-App/Mannalon-App/vendor/laravel/framework/src/Illuminate/Collections/Collection.php(778): Illuminate\\Support\\Arr::map()
+#6 /home/runner/work/Mannalon-App/Mannalon-App/vendor/laravel/framework/src/Illuminate/Foundation/Console/RouteListCommand.php(115): Illuminate\\Support\\Collection->map()
+#7 /home/runner/work/Mannalon-App/Mannalon-App/vendor/laravel/framework/src/Illuminate/Foundation/Console/RouteListCommand.php(101): Illuminate\\Foundation\\Console\\RouteListCommand->getRoutes()
+#8 /home/runner/work/Mannalon-App/Mannalon-App/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Foundation\\Console\\RouteListCommand->handle()
+#9 /home/runner/work/Mannalon-App/Mannalon-App/vendor/laravel/framework/src/Illuminate/Container/Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#10 /home/runner/work/Mannalon-App/Mannalon-App/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure()
+#11 /home/runner/work/Mannalon-App/Mannalon-App/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#12 /home/runner/work/Mannalon-App/Mannalon-App/vendor/laravel/framework/src/Illuminate/Container/Container.php(662): Illuminate\\Container\\BoundMethod::call()
+#13 /home/runner/work/Mannalon-App/Mannalon-App/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate\\Container\\Container->call()
+#14 /home/runner/work/Mannalon-App/Mannalon-App/vendor/symfony/console/Command/Command.php(326): Illuminate\\Console\\Command->execute()
+#15 /home/runner/work/Mannalon-App/Mannalon-App/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony\\Component\\Console\\Command\\Command->run()
+#16 /home/runner/work/Mannalon-App/Mannalon-App/vendor/symfony/console/Application.php(1106): Illuminate\\Console\\Command->run()
+#17 /home/runner/work/Mannalon-App/Mannalon-App/vendor/symfony/console/Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand()
+#18 /home/runner/work/Mannalon-App/Mannalon-App/vendor/symfony/console/Application.php(175): Symfony\\Component\\Console\\Application->doRun()
+#19 /home/runner/work/Mannalon-App/Mannalon-App/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(201): Symfony\\Component\\Console\\Application->run()
+#20 /home/runner/work/Mannalon-App/Mannalon-App/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle()
+#21 {main}
+"} 

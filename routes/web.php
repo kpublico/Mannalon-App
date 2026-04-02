@@ -7,6 +7,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminLandManagementController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\MessagingController;
+use App\Http\Controllers\LocationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,6 +22,14 @@ Route::get('/test', function () {
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+// Public Location API (used by registration and public forms)
+Route::prefix('api/locations')->name('api.locations.')->group(function () {
+    Route::get('/regions', [LocationController::class, 'regions'])->name('regions');
+    Route::get('/provinces', [LocationController::class, 'provinces'])->name('provinces');
+    Route::get('/cities', [LocationController::class, 'cities'])->name('cities');
+    Route::get('/barangays', [LocationController::class, 'barangays'])->name('barangays');
 });
 
 // Auth Routes

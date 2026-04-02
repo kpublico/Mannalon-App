@@ -6,7 +6,8 @@
         "php": "^8.1",
         "laravel/framework": "^10.0",
         "laravel/tinker": "^2.8",
-        "guzzlehttp/guzzle": "7.10"
+        "guzzlehttp/guzzle": "7.10",
+        "yajra/laravel-address": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

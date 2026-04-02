@@ -83,13 +83,14 @@ class AuthController extends Controller
             'password' => 'required|min:6|confirmed',
             'password_confirmation' => 'required',
             'sex' => 'required|in:male,female',
-            'state' => 'required|string|max:100',
-            'city' => 'required|string|max:100',
+            'region' => 'nullable|string|max:120',
+            'state' => 'required|string|max:120',
+            'city' => 'required|string|max:120',
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:255',
             'house_number' => 'nullable|string|max:50',
             'zone_purok' => 'nullable|string|max:100',
-            'barangay' => 'nullable|string|max:100'
+            'barangay' => 'nullable|string|max:120'
         ]);
 
         if ($validator->fails()) {

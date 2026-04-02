@@ -1158,15 +1158,19 @@ class AdminController extends Controller
     }
 
     /**
-     * API endpoint to get all Philippine regions
+     * API endpoint to get all Philippine regions (PSGC data)
      */
     public function getRegions()
     {
-        return response()->json(\App\Services\PhilippineLocationService::getRegions());
+        $regions = \App\Models\Address\PhRegion::orderBy('region_id')
+            ->get(['code', 'name', 'region_id'])
+            ->map(fn ($r) => ['code' => $r->region_id, 'name' => $r->name]);
+
+        return response()->json($regions);
     }
 
     /**
-     * API endpoint to get provinces by region code
+     * API endpoint to get provinces by region code (PSGC data)
      */
     public function getProvincesByRegion(Request $request)
     {
@@ -1174,11 +1178,17 @@ class AdminController extends Controller
         if (!$regionCode) {
             return response()->json(['error' => 'Region code is required'], 422);
         }
-        return response()->json(\App\Services\PhilippineLocationService::getProvincesByRegion($regionCode));
+
+        $provinces = \App\Models\Address\PhProvince::where('region_id', $regionCode)
+            ->orderBy('name')
+            ->get(['code', 'name', 'region_id', 'province_id'])
+            ->map(fn ($p) => ['code' => $p->province_id, 'name' => $p->name]);
+
+        return response()->json($provinces);
     }
 
     /**
-     * API endpoint to get municipalities by province code
+     * API endpoint to get municipalities/cities by province code (PSGC data)
      */
     public function getMunicipalitiesByProvince(Request $request)
     {
@@ -1186,11 +1196,17 @@ class AdminController extends Controller
         if (!$provinceCode) {
             return response()->json(['error' => 'Province code is required'], 422);
         }
-        return response()->json(\App\Services\PhilippineLocationService::getMunicipalitiesByProvince($provinceCode));
+
+        $cities = \App\Models\Address\PhCity::where('province_id', $provinceCode)
+            ->orderBy('name')
+            ->get(['code', 'name', 'province_id', 'city_id'])
+            ->map(fn ($c) => ['code' => $c->city_id, 'name' => $c->name]);
+
+        return response()->json($cities);
     }
 
     /**
-     * API endpoint to get barangays by municipality code
+     * API endpoint to get barangays by city/municipality code (PSGC data)
      */
     public function getBarangaysByMunicipality(Request $request)
     {
@@ -1198,18 +1214,20 @@ class AdminController extends Controller
         if (!$municipalityCode) {
             return response()->json(['error' => 'Municipality code is required'], 422);
         }
-        return response()->json(\App\Services\PhilippineLocationService::getBarangaysByMunicipality($municipalityCode));
+
+        $barangays = \App\Models\Address\PhBarangay::where('city_id', $municipalityCode)
+            ->orderBy('name')
+            ->get(['code', 'name', 'city_id'])
+            ->map(fn ($b) => ['code' => $b->code, 'name' => $b->name]);
+
+        return response()->json($barangays);
     }
 
     /**
-     * API endpoint to get sitios by barangay code
+     * API endpoint for sitios/puroks (not in PSGC; returns empty array)
      */
     public function getSitiosByBarangay(Request $request)
     {
-        $barangayCode = $request->query('barangay_code');
-        if (!$barangayCode) {
-            return response()->json(['error' => 'Barangay code is required'], 422);
-        }
-        return response()->json(\App\Services\PhilippineLocationService::getSitiosByBarangay($barangayCode));
+        return response()->json([]);
     }
 }

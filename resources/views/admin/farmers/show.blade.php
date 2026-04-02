@@ -58,10 +58,18 @@
 
         <h3>2. Address Information</h3>
         <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.75rem;">
-            <input type="text" name="region" value="{{ old('region', $farmer->region) }}" placeholder="Region">
-            <input type="text" name="province" value="{{ old('province', $farmer->province) }}" placeholder="Province">
-            <input type="text" name="municipality_city" value="{{ old('municipality_city', $farmer->municipality_city) }}" placeholder="Municipality/City">
-            <input type="text" name="barangay" value="{{ old('barangay', $farmer->barangay) }}" placeholder="Barangay">
+            <select name="region" id="show_region">
+                <option value="">Select Region</option>
+            </select>
+            <select name="province" id="show_province" disabled>
+                <option value="">Select Province</option>
+            </select>
+            <select name="municipality_city" id="show_municipality" disabled>
+                <option value="">Select Municipality/City</option>
+            </select>
+            <select name="barangay" id="show_barangay" disabled>
+                <option value="">Select Barangay</option>
+            </select>
             <input type="text" name="sitio_purok" value="{{ old('sitio_purok', $farmer->sitio_purok) }}" placeholder="Sitio/Purok">
         </div>
 
@@ -884,6 +892,137 @@
             initLeafletBoundaryMap('Using OpenStreetMap fallback');
             console.error(error);
         });
+})();
+</script>
+
+<script>
+// ---- Dynamic Address Dropdowns (show/edit form) ----
+(() => {
+    const regionSel   = document.getElementById('show_region');
+    const provinceSel = document.getElementById('show_province');
+    const citySel     = document.getElementById('show_municipality');
+    const barangaySel = document.getElementById('show_barangay');
+
+    if (!regionSel) return;
+
+    const savedRegion   = @json(old('region', $farmer->region ?? ''));
+    const savedProvince = @json(old('province', $farmer->province ?? ''));
+    const savedCity     = @json(old('municipality_city', $farmer->municipality_city ?? ''));
+    const savedBarangay = @json(old('barangay', $farmer->barangay ?? ''));
+
+    async function loadRegions() {
+        try {
+            const res = await fetch("{{ route('admin.api.locations.regions') }}");
+            const data = await res.json();
+            regionSel.innerHTML = '<option value="">Select Region</option>';
+            data.forEach(r => {
+                const opt = document.createElement('option');
+                opt.value = r.name;
+                opt.dataset.code = r.code;
+                opt.textContent = r.name;
+                if (r.name === savedRegion) opt.selected = true;
+                regionSel.appendChild(opt);
+            });
+            if (savedRegion) {
+                const sel = regionSel.querySelector('option:checked');
+                if (sel && sel.dataset.code) await loadProvinces(sel.dataset.code);
+            }
+        } catch (e) { console.error('Error loading regions:', e); }
+    }
+
+    async function loadProvinces(regionCode) {
+        citySel.innerHTML = '<option value="">Select Municipality/City</option>';
+        citySel.disabled = true;
+        barangaySel.innerHTML = '<option value="">Select Barangay</option>';
+        barangaySel.disabled = true;
+        if (!regionCode) {
+            provinceSel.innerHTML = '<option value="">Select Province</option>';
+            provinceSel.disabled = true;
+            return;
+        }
+        try {
+            const res = await fetch("{{ route('admin.api.locations.provinces') }}?region_code=" + encodeURIComponent(regionCode));
+            const data = await res.json();
+            provinceSel.innerHTML = '<option value="">Select Province</option>';
+            provinceSel.disabled = false;
+            data.forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p.name;
+                opt.dataset.code = p.code;
+                opt.textContent = p.name;
+                if (p.name === savedProvince) opt.selected = true;
+                provinceSel.appendChild(opt);
+            });
+            if (savedProvince) {
+                const sel = provinceSel.querySelector('option:checked');
+                if (sel && sel.dataset.code) await loadCities(sel.dataset.code);
+            }
+        } catch (e) { console.error('Error loading provinces:', e); }
+    }
+
+    async function loadCities(provinceCode) {
+        barangaySel.innerHTML = '<option value="">Select Barangay</option>';
+        barangaySel.disabled = true;
+        if (!provinceCode) {
+            citySel.innerHTML = '<option value="">Select Municipality/City</option>';
+            citySel.disabled = true;
+            return;
+        }
+        try {
+            const res = await fetch("{{ route('admin.api.locations.municipalities') }}?province_code=" + encodeURIComponent(provinceCode));
+            const data = await res.json();
+            citySel.innerHTML = '<option value="">Select Municipality/City</option>';
+            citySel.disabled = false;
+            data.forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c.name;
+                opt.dataset.code = c.code;
+                opt.textContent = c.name;
+                if (c.name === savedCity) opt.selected = true;
+                citySel.appendChild(opt);
+            });
+            if (savedCity) {
+                const sel = citySel.querySelector('option:checked');
+                if (sel && sel.dataset.code) await loadBarangays(sel.dataset.code);
+            }
+        } catch (e) { console.error('Error loading cities:', e); }
+    }
+
+    async function loadBarangays(cityCode) {
+        if (!cityCode) {
+            barangaySel.innerHTML = '<option value="">Select Barangay</option>';
+            barangaySel.disabled = true;
+            return;
+        }
+        try {
+            const res = await fetch("{{ route('admin.api.locations.barangays') }}?municipality_code=" + encodeURIComponent(cityCode));
+            const data = await res.json();
+            barangaySel.innerHTML = '<option value="">Select Barangay</option>';
+            barangaySel.disabled = false;
+            data.forEach(b => {
+                const opt = document.createElement('option');
+                opt.value = b.name;
+                opt.textContent = b.name;
+                if (b.name === savedBarangay) opt.selected = true;
+                barangaySel.appendChild(opt);
+            });
+        } catch (e) { console.error('Error loading barangays:', e); }
+    }
+
+    regionSel.addEventListener('change', e => {
+        const sel = e.target.options[e.target.selectedIndex];
+        loadProvinces(sel ? sel.dataset.code : '');
+    });
+    provinceSel.addEventListener('change', e => {
+        const sel = e.target.options[e.target.selectedIndex];
+        loadCities(sel ? sel.dataset.code : '');
+    });
+    citySel.addEventListener('change', e => {
+        const sel = e.target.options[e.target.selectedIndex];
+        loadBarangays(sel ? sel.dataset.code : '');
+    });
+
+    loadRegions();
 })();
 </script>
 @endsection
