@@ -25,12 +25,43 @@
             color: white;
             border-left: 4px solid #047857;
         }
+        /* Mobile Sidebar Styles */
+        .mobile-sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 40;
+            display: none;
+        }
+        .mobile-sidebar.active {
+            display: block;
+        }
+        .mobile-sidebar-content {
+            width: 75%;
+            height: 100vh;
+            background: white;
+            overflow-y: auto;
+        }
+        @media (max-width: 768px) {
+            .chat-window {
+                width: calc(100% - 2rem) !important;
+                height: 400px !important;
+                right: 1rem !important;
+                bottom: 100px !important;
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-50">
+    <!-- Mobile Sidebar Overlay -->
+    <div id="mobileSidebarOverlay" class="mobile-sidebar" onclick="toggleMobileSidebar()"></div>
+    
     <div class="flex h-screen overflow-hidden">
         <!-- Sidebar -->
-        <aside class="w-64 bg-white text-gray-800 flex-shrink-0 hidden md:block shadow-lg border-r border-gray-200">
+        <aside id="sidebar" class="w-64 bg-white text-gray-800 flex-shrink-0 hidden md:block shadow-lg border-r border-gray-200 overflow-y-auto fixed md:relative md:overflow-visible h-full md:h-auto">
             <div class="p-6">
                 <div class="flex items-center gap-3 mb-8">
                     <div class="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center">
@@ -87,9 +118,13 @@
         </aside>
 
         <!-- Main Content Area -->
-        <div class="flex-1 flex flex-col overflow-hidden">
+        <div class="flex-1 flex flex-col overflow-hidden md:ml-0">
             <!-- Top Header -->
-            <header class="bg-white shadow-md px-6 py-4 flex items-center justify-between">
+            <header class="bg-white shadow-md px-4 md:px-6 py-4 flex items-center justify-between flex-shrink-0">
+                <!-- Mobile Menu Button -->
+                <button id="mobileMenuBtn" onclick="toggleMobileSidebar()" class="md:hidden text-gray-600 hover:text-gray-900 text-2xl">
+                    <i class="fas fa-bars"></i>
+                </button>
                 <div>
                     <h1 class="text-2xl font-bold text-gray-800">@yield('page-title')</h1>
                     <p class="text-sm text-gray-500">@yield('page-subtitle', 'Welcome to your dashboard')</p>
@@ -102,11 +137,31 @@
                     <div class="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold">
                         {{ strtoupper(substr(auth()->user()->name ?? 'F', 0, 1)) }}
                     </div>
-                </div>
-            </header>
+                </div>4 md:p-6">
+                @yield('content')
+            </main>
+        </div>
+    </div>
 
-            <!-- Content -->
-            <main class="flex-1 overflow-y-auto p-6">
+    <script>
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobileSidebarOverlay');
+            sidebar.classList.toggle('!block');
+            sidebar.classList.toggle('hidden');
+            overlay.classList.toggle('active');
+            document.body.style.overflow = overlay.classList.contains('active') ? 'hidden' : 'auto';
+        }
+        
+        // Close mobile sidebar when clicking on a link
+        document.querySelectorAll('.sidebar-link').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 768) {
+                    toggleMobileSidebar();
+                }
+            });chat-window fixed bottom-24 right-6 md:w-96 md:h-[600px] w-[calc(100%-2rem)] h-[4
+        });
+    </script   <main class="flex-1 overflow-y-auto p-6">
                 @yield('content')
             </main>
         </div>
