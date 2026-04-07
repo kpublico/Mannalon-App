@@ -30,6 +30,14 @@
             transition: all 0.3s ease;
             border: 2px solid #e5e7eb;
         }
+            .service-card {
+                transition: all 0.3s ease;
+                border: 2px solid #e5e7eb;
+                min-height: 320px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+            }
         .service-card:hover {
             border-color: #064e3b;
             box-shadow: 0 8px 20px rgba(6, 78, 59, 0.1);
@@ -172,83 +180,83 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
                 <!-- Service 1 -->
-                <div class="service-card bg-white rounded-xl p-8">
-                    <div class="text-4xl mb-4">�</div>
-                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Announcements</h3>
-                    <p class="text-gray-600 mb-4">
+                    <div class="service-card bg-white rounded-xl p-5 md:p-6 lg:p-8 shadow-sm hover:shadow-lg">
+                        <div class="text-3xl md:text-4xl mb-3 md:mb-4">📢</div>
+                        <h3 class="text-lg md:text-xl lg:text-2xl font-bold text-gray-900 mb-2 md:mb-3">Announcements</h3>
+                        <p class="text-sm md:text-base text-gray-600 mb-4 line-clamp-3 min-h-[60px]">
                         Receive timely updates from admins and stay informed about important farming announcements, policies, and events in your area.
                     </p>
-                    <button class="text-emerald-700 font-semibold hover:text-emerald-800">Learn More →</button>
+                        <button class="text-emerald-700 font-semibold hover:text-emerald-800 text-sm md:text-base transition mt-auto">Learn More →</button>
                 </div>
 
                 <!-- Service 2 -->
-                <div class="service-card bg-white rounded-xl p-8">
-                    <div class="text-4xl mb-4">📚</div>
-                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Farming Guides</h3>
-                    <p class="text-gray-600 mb-4">
+                    <div class="service-card bg-white rounded-xl p-5 md:p-6 lg:p-8 shadow-sm hover:shadow-lg">
+                        <div class="text-3xl md:text-4xl mb-3 md:mb-4">📚</div>
+                        <h3 class="text-lg md:text-xl lg:text-2xl font-bold text-gray-900 mb-2 md:mb-3">Farming Guides</h3>
+                        <p class="text-sm md:text-base text-gray-600 mb-4 line-clamp-3 min-h-[60px]">
                         Access comprehensive farming guides with best practices, techniques, and expert tips to improve your crop and livestock management.
                     </p>
-                    <button class="text-emerald-700 font-semibold hover:text-emerald-800">Learn More →</button>
+                        <button class="text-emerald-700 font-semibold hover:text-emerald-800 text-sm md:text-base transition mt-auto">Learn More →</button>
                 </div>
 
                 <!-- Service 3 -->
-                <div class="service-card bg-white rounded-xl p-8">
-                    <div class="text-4xl mb-4">🌤️</div>
-                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Weather Monitoring</h3>
-                    <p class="text-gray-600 mb-4">
+                    <div class="service-card bg-white rounded-xl p-5 md:p-6 lg:p-8 shadow-sm hover:shadow-lg">
+                        <div class="text-3xl md:text-4xl mb-3 md:mb-4">🌤️</div>
+                        <h3 class="text-lg md:text-xl lg:text-2xl font-bold text-gray-900 mb-2 md:mb-3">Weather Monitoring</h3>
+                        <p class="text-sm md:text-base text-gray-600 mb-4 line-clamp-3 min-h-[60px]">
                         Track real-time weather data and forecasts customized for your location to make informed farming decisions.
                     </p>
-                    <button class="text-emerald-700 font-semibold hover:text-emerald-800">Learn More →</button>
+                        <button class="text-emerald-700 font-semibold hover:text-emerald-800 text-sm md:text-base transition mt-auto">Learn More →</button>
                 </div>
 
                 <!-- Service 4 -->
-                <div class="service-card bg-white rounded-xl p-8">
-                    <div class="text-4xl mb-4">💰</div>
-                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Market Prices</h3>
-                    <p class="text-gray-600 mb-4">
+                <div class="service-card bg-white rounded-xl p-5 md:p-6 lg:p-8 shadow-sm hover:shadow-lg">
+                    <div class="text-3xl md:text-4xl mb-3 md:mb-4">💰</div>
+                    <h3 class="text-lg md:text-xl lg:text-2xl font-bold text-gray-900 mb-2 md:mb-3">Market Prices</h3>
+                    <p class="text-sm md:text-base text-gray-600 mb-4 line-clamp-3 min-h-[60px]">
                         View current market prices for agricultural products and optimize your selling strategies based on real-time market insights.
                     </p>
-                    <button class="text-emerald-700 font-semibold hover:text-emerald-800">Learn More →</button>
+                    <button class="text-emerald-700 font-semibold hover:text-emerald-800 text-sm md:text-base transition mt-auto">Learn More →</button>
                 </div>
 
                 <!-- Service 5 -->
-                <div class="service-card bg-white rounded-xl p-8">
-                    <div class="text-4xl mb-4">🌾</div>
-                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Crop Management</h3>
-                    <p class="text-gray-600 mb-4">
+                <div class="service-card bg-white rounded-xl p-5 md:p-6 lg:p-8 shadow-sm hover:shadow-lg">
+                    <div class="text-3xl md:text-4xl mb-3 md:mb-4">🌾</div>
+                    <h3 class="text-lg md:text-xl lg:text-2xl font-bold text-gray-900 mb-2 md:mb-3">Crop Management</h3>
+                    <p class="text-sm md:text-base text-gray-600 mb-4 line-clamp-3 min-h-[60px]">
                         Record and track your crops, monitor growth stages, and maintain detailed records for better farm management and analysis.
                     </p>
-                    <button class="text-emerald-700 font-semibold hover:text-emerald-800">Learn More →</button>
+                    <button class="text-emerald-700 font-semibold hover:text-emerald-800 text-sm md:text-base transition mt-auto">Learn More →</button>
                 </div>
 
                 <!-- Service 6 -->
-                <div class="service-card bg-white rounded-xl p-8">
-                    <div class="text-4xl mb-4">🐄</div>
-                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Livestock Tracking</h3>
-                    <p class="text-gray-600 mb-4">
+                <div class="service-card bg-white rounded-xl p-5 md:p-6 lg:p-8 shadow-sm hover:shadow-lg">
+                    <div class="text-3xl md:text-4xl mb-3 md:mb-4">🐄</div>
+                    <h3 class="text-lg md:text-xl lg:text-2xl font-bold text-gray-900 mb-2 md:mb-3">Livestock Tracking</h3>
+                    <p class="text-sm md:text-base text-gray-600 mb-4 line-clamp-3 min-h-[60px]">
                         Manage your livestock records including health, breeding cycles, and production metrics in one centralized platform.
                     </p>
-                    <button class="text-emerald-700 font-semibold hover:text-emerald-800">Learn More →</button>
+                    <button class="text-emerald-700 font-semibold hover:text-emerald-800 text-sm md:text-base transition mt-auto">Learn More →</button>
                 </div>
 
                 <!-- Service 7 -->
-                <div class="service-card bg-white rounded-xl p-8">
-                    <div class="text-4xl mb-4">🤖</div>
-                    <h3 class="text-2xl font-bold text-gray-900 mb-3">AI Chatbot Assistant</h3>
-                    <p class="text-gray-600 mb-4">
+                <div class="service-card bg-white rounded-xl p-5 md:p-6 lg:p-8 shadow-sm hover:shadow-lg">
+                    <div class="text-3xl md:text-4xl mb-3 md:mb-4">🤖</div>
+                    <h3 class="text-lg md:text-xl lg:text-2xl font-bold text-gray-900 mb-2 md:mb-3">AI Chatbot Assistant</h3>
+                    <p class="text-sm md:text-base text-gray-600 mb-4 line-clamp-3 min-h-[60px]">
                         Get instant farming advice and guidance from an intelligent AI assistant available 24/7 to answer your agricultural questions.
                     </p>
-                    <button class="text-emerald-700 font-semibold hover:text-emerald-800">Learn More →</button>
+                    <button class="text-emerald-700 font-semibold hover:text-emerald-800 text-sm md:text-base transition mt-auto">Learn More →</button>
                 </div>
 
                 <!-- Service 8 -->
-                <div class="service-card bg-white rounded-xl p-8">
-                    <div class="text-4xl mb-4">💬</div>
-                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Messaging & Notifications</h3>
-                    <p class="text-gray-600 mb-4">
+                <div class="service-card bg-white rounded-xl p-5 md:p-6 lg:p-8 shadow-sm hover:shadow-lg">
+                    <div class="text-3xl md:text-4xl mb-3 md:mb-4">💬</div>
+                    <h3 class="text-lg md:text-xl lg:text-2xl font-bold text-gray-900 mb-2 md:mb-3">Messaging & Notifications</h3>
+                    <p class="text-sm md:text-base text-gray-600 mb-4 line-clamp-3 min-h-[60px]">
                         Stay connected with direct messaging, broadcast notifications, and keep track of all important communications in one place.
                     </p>
-                    <button class="text-emerald-700 font-semibold hover:text-emerald-800">Learn More →</button>
+                    <button class="text-emerald-700 font-semibold hover:text-emerald-800 text-sm md:text-base transition mt-auto">Learn More →</button>
                 </div>
             </div>
         </div>
