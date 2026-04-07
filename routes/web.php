@@ -7,6 +7,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminLandManagementController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\MessagingController;
+use App\Http\Controllers\WelcomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,9 +20,7 @@ Route::get('/test', function () {
     return 'Mannalon App is running!';
 });
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [WelcomeController::class, 'index']);
 
 // Auth Routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');

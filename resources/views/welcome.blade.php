@@ -100,15 +100,15 @@
             <!-- Quick Stats -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16">
                 <div class="stat-card bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6">
-                    <div class="text-4xl font-bold text-white mb-2">15,000+</div>
+                    <div class="text-4xl font-bold text-white mb-2">{{ number_format($activeFarmers) }}+</div>
                     <p class="text-emerald-100">Active Farmers</p>
                 </div>
                 <div class="stat-card bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6">
-                    <div class="text-4xl font-bold text-white mb-2">8,500+</div>
+                    <div class="text-4xl font-bold text-white mb-2">{{ number_format($monitoredFarms) }}+</div>
                     <p class="text-emerald-100">Monitored Farms</p>
                 </div>
                 <div class="stat-card bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6">
-                    <div class="text-4xl font-bold text-white mb-2">2.5M+</div>
+                    <div class="text-4xl font-bold text-white mb-2">{{ number_format(round($tonsHarvested / 1000000, 1)) }}M+</div>
                     <p class="text-emerald-100">Tons Harvested</p>
                 </div>
             </div>
@@ -165,60 +165,80 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- Service 1 -->
                 <div class="service-card bg-white rounded-xl p-8">
-                    <div class="text-4xl mb-4">📈</div>
-                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Yield Forecast</h3>
+                    <div class="text-4xl mb-4">�</div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Announcements</h3>
                     <p class="text-gray-600 mb-4">
-                        AI-powered predictions for crop yield based on soil data, weather patterns, and historical trends.
+                        Receive timely updates from admins and stay informed about important farming announcements, policies, and events in your area.
                     </p>
                     <button class="text-emerald-700 font-semibold hover:text-emerald-800">Learn More →</button>
                 </div>
 
                 <!-- Service 2 -->
                 <div class="service-card bg-white rounded-xl p-8">
-                    <div class="text-4xl mb-4">🧬</div>
-                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Soil Analysis</h3>
+                    <div class="text-4xl mb-4">📚</div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Farming Guides</h3>
                     <p class="text-gray-600 mb-4">
-                        Detailed soil health reports with recommendations for optimal fertilizer and nutrient management.
+                        Access comprehensive farming guides with best practices, techniques, and expert tips to improve your crop and livestock management.
                     </p>
                     <button class="text-emerald-700 font-semibold hover:text-emerald-800">Learn More →</button>
                 </div>
 
                 <!-- Service 3 -->
                 <div class="service-card bg-white rounded-xl p-8">
-                    <div class="text-4xl mb-4">🐛</div>
-                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Pest Tracking</h3>
+                    <div class="text-4xl mb-4">🌤️</div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Weather Monitoring</h3>
                     <p class="text-gray-600 mb-4">
-                        Monitor pest infestations and receive early warnings with integrated pest management solutions.
+                        Track real-time weather data and forecasts customized for your location to make informed farming decisions.
                     </p>
                     <button class="text-emerald-700 font-semibold hover:text-emerald-800">Learn More →</button>
                 </div>
 
                 <!-- Service 4 -->
                 <div class="service-card bg-white rounded-xl p-8">
-                    <div class="text-4xl mb-4">🚜</div>
-                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Equipment Booking</h3>
+                    <div class="text-4xl mb-4">💰</div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Market Prices</h3>
                     <p class="text-gray-600 mb-4">
-                        Rent or book farming equipment at affordable rates from verified suppliers in your area.
+                        View current market prices for agricultural products and optimize your selling strategies based on real-time market insights.
                     </p>
                     <button class="text-emerald-700 font-semibold hover:text-emerald-800">Learn More →</button>
                 </div>
 
                 <!-- Service 5 -->
                 <div class="service-card bg-white rounded-xl p-8">
-                    <div class="text-4xl mb-4">☀️</div>
-                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Drying Tracking</h3>
+                    <div class="text-4xl mb-4">🌾</div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Crop Management</h3>
                     <p class="text-gray-600 mb-4">
-                        Monitor grain drying conditions and get alerts for optimal harvesting and storage timing.
+                        Record and track your crops, monitor growth stages, and maintain detailed records for better farm management and analysis.
                     </p>
                     <button class="text-emerald-700 font-semibold hover:text-emerald-800">Learn More →</button>
                 </div>
 
                 <!-- Service 6 -->
                 <div class="service-card bg-white rounded-xl p-8">
-                    <div class="text-4xl mb-4">💡</div>
-                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Expert Consultation</h3>
+                    <div class="text-4xl mb-4">🐄</div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Livestock Tracking</h3>
                     <p class="text-gray-600 mb-4">
-                        Connect with agricultural experts for personalized advice on your farming challenges and opportunities.
+                        Manage your livestock records including health, breeding cycles, and production metrics in one centralized platform.
+                    </p>
+                    <button class="text-emerald-700 font-semibold hover:text-emerald-800">Learn More →</button>
+                </div>
+
+                <!-- Service 7 -->
+                <div class="service-card bg-white rounded-xl p-8">
+                    <div class="text-4xl mb-4">🤖</div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-3">AI Chatbot Assistant</h3>
+                    <p class="text-gray-600 mb-4">
+                        Get instant farming advice and guidance from an intelligent AI assistant available 24/7 to answer your agricultural questions.
+                    </p>
+                    <button class="text-emerald-700 font-semibold hover:text-emerald-800">Learn More →</button>
+                </div>
+
+                <!-- Service 8 -->
+                <div class="service-card bg-white rounded-xl p-8">
+                    <div class="text-4xl mb-4">💬</div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Messaging & Notifications</h3>
+                    <p class="text-gray-600 mb-4">
+                        Stay connected with direct messaging, broadcast notifications, and keep track of all important communications in one place.
                     </p>
                     <button class="text-emerald-700 font-semibold hover:text-emerald-800">Learn More →</button>
                 </div>
