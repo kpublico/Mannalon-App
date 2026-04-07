@@ -115,10 +115,6 @@
                     <div class="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2">{{ number_format($monitoredFarms) }}+</div>
                     <p class="text-sm md:text-base text-emerald-100">Monitored Farms</p>
                 </div>
-            </div>>
-                    <div class="text-4xl font-bold text-white mb-2">{{ number_format(round($tonsHarvested / 1000000, 1)) }}M+</div>
-                    <p class="text-emerald-100">Tons Harvested</p>
-                </div>
             </div>
         </div>
     </section>
