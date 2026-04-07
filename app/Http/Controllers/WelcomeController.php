@@ -17,7 +17,6 @@ class WelcomeController extends Controller
                 ->where('status', 'active')
                 ->count(),
             'monitoredFarms' => FarmDetail::count(),
-            'tonsHarvested' => (CropReport::sum('actual_yield_kg') ?? 0) / 1000, // Convert kg to tons
         ];
 
         return view('welcome', $stats);

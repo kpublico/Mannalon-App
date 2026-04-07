@@ -106,7 +106,7 @@
             </div>
 
             <!-- Quick Stats -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 mt-12 md:mt-16">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 mt-12 md:mt-16">
                 <div class="stat-card bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-4 md:p-6">
                     <div class="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2">{{ number_format($activeFarmers) }}+</div>
                     <p class="text-sm md:text-base text-emerald-100">Active Farmers</p>
@@ -114,10 +114,6 @@
                 <div class="stat-card bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-4 md:p-6">
                     <div class="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2">{{ number_format($monitoredFarms) }}+</div>
                     <p class="text-sm md:text-base text-emerald-100">Monitored Farms</p>
-                </div>
-                <div class="stat-card bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-4 md:p-6">
-                    <div class="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2">{{ number_format(round($tonsHarvested / 1000000, 1)) }}M+</div>
-                    <p class="text-sm md:text-base text-emerald-100">Tons Harvested</p>
                 </div>
             </div>>
                     <div class="text-4xl font-bold text-white mb-2">{{ number_format(round($tonsHarvested / 1000000, 1)) }}M+</div>
