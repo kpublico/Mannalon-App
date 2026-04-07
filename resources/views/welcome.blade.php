@@ -106,14 +106,18 @@
             </div>
 
             <!-- Quick Stats -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 mt-12 md:mt-16">
-                <div class="stat-card bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-4 md:p-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mt-12 md:mt-16">
+                <div class="stat-card bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-4 md:p-6 hover:bg-opacity-30 transition-all">
                     <div class="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2">{{ number_format($activeFarmers) }}+</div>
                     <p class="text-sm md:text-base text-emerald-100">Active Farmers</p>
                 </div>
-                <div class="stat-card bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-4 md:p-6">
+                <div class="stat-card bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-4 md:p-6 hover:bg-opacity-30 transition-all">
                     <div class="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2">{{ number_format($monitoredFarms) }}+</div>
                     <p class="text-sm md:text-base text-emerald-100">Monitored Farms</p>
+                </div>
+                <div class="stat-card bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-4 md:p-6 hover:bg-opacity-30 transition-all">
+                    <div class="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2">{{ number_format($tonsHarvested, 1) }}M+</div>
+                    <p class="text-sm md:text-base text-emerald-100">Tons Harvested</p>
                 </div>
             </div>
         </div>
@@ -159,14 +163,14 @@
     </section>
 
     <!-- AVAILABLE SERVICES SECTION -->
-    <section id="services" class="py-20 bg-gray-50">
+    <section id="services" class="py-12 md:py-20 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl font-bold text-gray-900 mb-4">Available Services</h2>
-                <p class="text-xl text-gray-600">Comprehensive tools to manage every aspect of your farming operation</p>
+            <div class="text-center mb-10 md:mb-16">
+                <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 md:mb-4">Available Services</h2>
+                <p class="text-base md:text-xl text-gray-600">Comprehensive tools to manage every aspect of your farming operation</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
                 <!-- Service 1 -->
                 <div class="service-card bg-white rounded-xl p-8">
                     <div class="text-4xl mb-4">�</div>
