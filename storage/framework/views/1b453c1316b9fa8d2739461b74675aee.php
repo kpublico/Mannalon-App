@@ -25,13 +25,29 @@
             color: white;
             border-left: 4px solid #047857;
         }
+        /* Mobile Sidebar Overlay */
+        .mobile-sidebar-overlay {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 30;
+            display: none;
+        }
+        .mobile-sidebar-overlay.active {
+            display: block;
+        }
     </style>
 </head>
 <body class="bg-gray-100">
     <?php $isSuperAdmin = auth()->check() && auth()->user()->isSuperAdmin(); ?>
+    <!-- Mobile Sidebar Overlay -->
+    <div id="sidebarOverlay" class="mobile-sidebar-overlay" onclick="toggleAdminSidebar()"></div>
     <div class="flex h-screen overflow-hidden bg-gray-100">
         <!-- Admin Sidebar -->
-        <aside class="w-64 bg-white text-gray-800 flex-shrink-0 hidden md:block shadow-xl border-r-2 border-emerald-500 fixed h-full left-0 top-0 z-40">
+        <aside id="adminSidebar" class="w-64 bg-white text-gray-800 flex-shrink-0 hidden md:block shadow-xl border-r-2 border-emerald-500 fixed md:relative h-full top-0 left-0 z-40 md:z-0 overflow-y-auto">
             <div class="p-6 bg-gradient-to-r from-emerald-600 to-emerald-700">
                 <div class="flex items-center gap-3 mb-2">
                     <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center">
@@ -124,27 +140,31 @@
         </aside>
 
         <!-- Main Content Area -->
-        <div class="flex-1 flex flex-col overflow-hidden md:ml-64">
+        <div class="flex-1 flex flex-col overflow-hidden">
             <!-- Top Header with Admin Badge -->
-            <header class="bg-white shadow-md px-6 py-4 flex items-center justify-between border-b-4 border-emerald-600 flex-shrink-0">
-                <div>
-                    <div class="flex items-center gap-3 mb-1">
-                        <h1 id="page-title" class="text-2xl font-bold text-gray-800">Dashboard</h1>
-                        <span class="px-3 py-1 <?php echo e($isSuperAdmin ? 'bg-indigo-700' : 'bg-red-600'); ?> text-white text-xs font-bold rounded-full"><?php echo e($isSuperAdmin ? 'SUPER ADMIN' : 'ADMIN'); ?></span>
+            <header class="bg-white shadow-md px-4 md:px-6 py-4 flex items-center justify-between border-b-4 border-emerald-600 flex-shrink-0">
+                <!-- Mobile Menu Button -->
+                <button id="adminMenuBtn" onclick="toggleAdminSidebar()" class="md:hidden text-gray-600 hover:text-gray-900 text-xl mr-4">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 md:gap-3 mb-1 flex-wrap">
+                        <h1 id="page-title" class="text-lg md:text-2xl font-bold text-gray-800 truncate">Dashboard</h1>
+                        <span class="px-2 md:px-3 py-1 <?php echo e($isSuperAdmin ? 'bg-indigo-700' : 'bg-red-600'); ?> text-white text-xs font-bold rounded-full"><?php echo e($isSuperAdmin ? 'SUPER ADMIN' : 'ADMIN'); ?></span>
                     </div>
-                    <p id="page-subtitle" class="text-sm text-gray-500">Manage your agricultural platform</p>
+                    <p id="page-subtitle" class="text-xs md:text-sm text-gray-500 hidden sm:block">Manage your agricultural platform</p>
                 </div>
-                <div class="flex items-center gap-4">
-                    <button class="relative p-2 text-gray-600 hover:text-emerald-600 transition">
-                        <i class="fas fa-bell text-xl"></i>
+                <div class="flex items-center gap-2 md:gap-4 flex-shrink-0">
+                    <button class="relative p-2 text-gray-600 hover:text-emerald-600 transition hidden sm:block">
+                        <i class="fas fa-bell text-lg md:text-xl"></i>
                         <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
                     </button>
-                    <div class="flex items-center gap-3">
-                        <div class="text-right">
-                            <p class="text-sm font-semibold text-gray-800"><?php echo e(auth()->user()->name ?? 'Admin'); ?></p>
-                            <p class="text-xs text-gray-500"><?php echo e($isSuperAdmin ? 'System Owner' : 'System Administrator'); ?></p>
+                    <div class="flex items-center gap-2 md:gap-3">
+                        <div class="text-right hidden sm:block">
+                            <p class="text-sm font-semibold text-gray-800 truncate"><?php echo e(auth()->user()->name ?? 'Admin'); ?></p>
+                            <p class="text-xs text-gray-500"><?php echo e($isSuperAdmin ? 'System Owner' : 'Admin'); ?></p>
                         </div>
-                        <div class="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold">
+                        <div class="w-8 md:w-10 h-8 md:h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-sm md:text-base flex-shrink-0">
                             <?php echo e(strtoupper(substr(auth()->user()->name ?? 'A', 0, 1))); ?>
 
                         </div>
@@ -154,10 +174,32 @@
 
             <!-- Content -->
             <main id="admin-content" class="flex-1 overflow-y-auto bg-gray-50">
-                <div class="mx-auto max-w-7xl px-6 py-8">
+                <div class="mx-auto max-w-7xl px-4 md:px-6 py-6 md:py-8">
                     <?php echo $__env->yieldContent('content'); ?>
                 </div>
             </main>
+        </div>
+    </div>
+
+    <script>
+        function toggleAdminSidebar() {
+            const sidebar = document.getElementById('adminSidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('!block');
+            sidebar.classList.toggle('hidden');
+            overlay.classList.toggle('active');
+            document.body.style.overflow = overlay.classList.contains('active') ? 'hidden' : 'auto';
+        }
+        
+        // Close sidebar when clicking on a link
+        document.querySelectorAll('.sidebar-nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 768) {
+                    toggleAdminSidebar();
+                }
+            });
+        });
+    </script>
         </div>
     </div>
 

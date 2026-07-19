@@ -164,6 +164,24 @@
             <section class="profile-card card-order-1">
                 <h4 class="font-semibold text-gray-900 mb-3">1. Personal Information - Personal Details</h4>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="md:col-span-3">
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Select Registered Farmer Account</label>
+                        <select name="user_id" id="registered_farmer_user_id" class="px-4 py-2 border border-gray-300 rounded-lg w-full" required>
+                            <option value="">Choose a registered farmer account</option>
+                            <?php $__currentLoopData = ($registeredFarmerUsers ?? collect()); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $registeredUser): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option
+                                    value="<?php echo e($registeredUser->id); ?>"
+                                    data-name="<?php echo e($registeredUser->name); ?>"
+                                    data-email="<?php echo e($registeredUser->email); ?>"
+                                    data-phone="<?php echo e($registeredUser->phone); ?>"
+                                    <?php if((string) old('user_id') === (string) $registeredUser->id): echo 'selected'; endif; ?>
+                                >
+                                    #<?php echo e($registeredUser->id); ?> - <?php echo e($registeredUser->name); ?> (<?php echo e($registeredUser->email); ?>)
+                                </option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </select>
+                        <p class="text-xs text-gray-500 mt-1">Only farmer accounts without an existing farmer profile are listed.</p>
+                    </div>
                     <input type="text" name="first_name" placeholder="First name" value="<?php echo e(old('first_name')); ?>" class="px-4 py-2 border border-gray-300 rounded-lg" required>
                     <input type="text" name="middle_name" placeholder="Middle name" value="<?php echo e(old('middle_name')); ?>" class="px-4 py-2 border border-gray-300 rounded-lg">
                     <input type="text" name="last_name" placeholder="Last name" value="<?php echo e(old('last_name')); ?>" class="px-4 py-2 border border-gray-300 rounded-lg" required>
@@ -350,8 +368,7 @@
                     </div>
                     <input type="text" name="verified_by" placeholder="Verified by (Admin name)" value="<?php echo e(old('verified_by')); ?>" class="px-4 py-2 border border-gray-300 rounded-lg">
                     <select name="profile_status" class="px-4 py-2 border border-gray-300 rounded-lg">
-                        <option value="pending" <?php if(old('profile_status') === 'pending'): echo 'selected'; endif; ?>>Pending</option>
-                        <option value="active" <?php if(old('profile_status') === 'active'): echo 'selected'; endif; ?>>Active</option>
+                        <option value="active" <?php if(old('profile_status', 'active') === 'active'): echo 'selected'; endif; ?>>Active</option>
                         <option value="inactive" <?php if(old('profile_status') === 'inactive'): echo 'selected'; endif; ?>>Inactive</option>
                         <option value="verified" <?php if(old('profile_status') === 'verified'): echo 'selected'; endif; ?>>Verified</option>
                     </select>
@@ -364,57 +381,79 @@
         </form>
     </div>
 
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <form method="GET" action="<?php echo e(route('admin.farmers.index')); ?>" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <input type="text" name="search" value="<?php echo e($search ?? ''); ?>" placeholder="Search name, contact, location" class="px-4 py-2 border border-gray-300 rounded-lg md:col-span-3">
-            <button class="px-4 py-2 bg-emerald-100 text-emerald-700 rounded-lg hover:bg-emerald-200 font-semibold">Search</button>
-        </form>
-
-        <div class="overflow-x-auto">
-            <table class="w-full">
-                <thead class="bg-gray-50 border-b-2 border-gray-200">
-                    <tr>
-                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Name</th>
-                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Contact</th>
-                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Farm Location</th>
-                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Land Size</th>
-                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Status</th>
-                        <th class="px-4 py-3 text-center text-sm font-semibold text-gray-700">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200">
-                    <?php $__empty_1 = true; $__currentLoopData = $farmers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $farmer): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-4 py-3 font-semibold text-gray-900"><?php echo e($farmer->name); ?></td>
-                            <td class="px-4 py-3 text-gray-600"><?php echo e($farmer->phone ?? 'N/A'); ?></td>
-                            <td class="px-4 py-3 text-gray-600"><?php echo e($farmer->farm_location ?? 'N/A'); ?></td>
-                            <td class="px-4 py-3 text-gray-600"><?php echo e($farmer->farm_size_hectares !== null ? number_format((float) $farmer->farm_size_hectares, 2) . ' ha' : 'N/A'); ?></td>
-                            <td class="px-4 py-3 text-gray-600"><?php echo e(ucfirst($farmer->profile_status ?? 'active')); ?></td>
-                            <td class="px-4 py-3">
-                                <div class="flex items-center justify-center gap-2">
-                                    <a href="<?php echo e(route('admin.farmers.show', $farmer->id)); ?>" class="px-3 py-1 text-xs bg-blue-600 text-white rounded">View</a>
-                                    <form method="POST" action="<?php echo e(route('admin.farmers.destroy', $farmer)); ?>" onsubmit="return confirm('Delete this farmer information?')">
-                                        <?php echo csrf_field(); ?>
-                                        <?php echo method_field('DELETE'); ?>
-                                        <button class="px-3 py-1 text-xs bg-red-600 text-white rounded">Delete</button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
-                        <tr>
-                            <td colspan="6" class="px-4 py-8 text-center text-gray-500">No farmer information yet.</td>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="mt-4"><?php echo e($farmers->links()); ?></div>
+    <div class="bg-white rounded-lg shadow-md p-6 border border-emerald-100">
+        <h4 class="text-lg font-semibold text-gray-900 mb-2">Farmer Data Display Location</h4>
+        <p class="text-sm text-gray-600 mb-4">Farmer summary/list has been removed from this page. All farmer data display is now under Reports &amp; Analytics.</p>
+        <a href="javascript:void(0)" onclick="typeof loadAdminPage === 'function' ? loadAdminPage('reports-analytics', '<?php echo e(route('admin.reports-analytics')); ?>') : (window.location.href='<?php echo e(route('admin.reports-analytics')); ?>')" class="inline-flex items-center px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 font-semibold">
+            <i class="fas fa-chart-line mr-2"></i>Open Reports &amp; Analytics
+        </a>
     </div>
 
 <script>
 (() => {
+    const userSelect = document.getElementById('registered_farmer_user_id');
+    const firstNameInput = document.querySelector('input[name="first_name"]');
+    const middleNameInput = document.querySelector('input[name="middle_name"]');
+    const lastNameInput = document.querySelector('input[name="last_name"]');
+    const emailInput = document.querySelector('input[name="email"]');
+    const phoneInput = document.querySelector('input[name="phone"]');
+
+    function splitNameParts(fullName) {
+        const parts = (fullName || '').trim().split(/\s+/).filter(Boolean);
+        if (parts.length === 0) {
+            return { first: '', middle: '', last: '' };
+        }
+        if (parts.length === 1) {
+            return { first: parts[0], middle: '', last: '' };
+        }
+        if (parts.length === 2) {
+            return { first: parts[0], middle: '', last: parts[1] };
+        }
+
+        return {
+            first: parts[0],
+            middle: parts.slice(1, -1).join(' '),
+            last: parts[parts.length - 1],
+        };
+    }
+
+    function applySelectedUserToForm() {
+        if (!userSelect || !firstNameInput || !middleNameInput || !lastNameInput || !emailInput || !phoneInput) {
+            return;
+        }
+
+        const selected = userSelect.options[userSelect.selectedIndex];
+        if (!selected || !selected.value) {
+            return;
+        }
+
+        const userName = selected.dataset.name || '';
+        const userEmail = selected.dataset.email || '';
+        const userPhone = selected.dataset.phone || '';
+        const nameParts = splitNameParts(userName);
+
+        if (!firstNameInput.value.trim()) {
+            firstNameInput.value = nameParts.first;
+        }
+        if (!middleNameInput.value.trim()) {
+            middleNameInput.value = nameParts.middle;
+        }
+        if (!lastNameInput.value.trim()) {
+            lastNameInput.value = nameParts.last;
+        }
+        if (!emailInput.value.trim()) {
+            emailInput.value = userEmail;
+        }
+        if (!phoneInput.value.trim()) {
+            phoneInput.value = userPhone;
+        }
+    }
+
+    if (userSelect) {
+        userSelect.addEventListener('change', applySelectedUserToForm);
+        applySelectedUserToForm();
+    }
+
     const form = document.querySelector('form[data-category-form="sections"]');
     if (!form) {
         return;
@@ -585,6 +624,8 @@
     form.addEventListener('submit', (event) => {
         const invalidField = form.querySelector(':invalid');
         if (!invalidField) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Saving Farmer...';
             return;
         }
 

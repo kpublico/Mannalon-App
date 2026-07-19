@@ -331,8 +331,8 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script>
-    (function () {
-        const points = @json($farmDetails->map(function ($item) {
+    @php
+        $mapPoints = $farmDetails->map(function ($item) {
             return [
                 'name' => optional($item->farmer)->name ?? 'Unknown Farmer',
                 'latitude' => (float) $item->latitude,
@@ -340,7 +340,11 @@
                 'farm_size' => (float) $item->farm_size,
                 'land_type' => $item->land_type,
             ];
-        })->values());
+        })->values();
+    @endphp
+
+    (function () {
+        const points = @json($mapPoints);
 
         const mapEl = document.getElementById('landMap');
         if (!mapEl) {

@@ -11,93 +11,104 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
         .sidebar-link {
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
+            color: #374151;
         }
-
         .sidebar-link:hover {
             background: #ecfdf5;
-            color: #047857;
+            color: #059669;
+            transform: translateX(5px);
         }
-
         .sidebar-link.active {
             background: #059669;
-            color: #ffffff;
+            color: white;
+            border-left: 4px solid #047857;
         }
-
-        .mobile-overlay {
-            background: rgba(15, 23, 42, 0.55);
-            backdrop-filter: blur(2px);
+        /* Mobile Sidebar Overlay */
+        .mobile-sidebar-overlay {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 30;
+            display: none;
+        }
+        .mobile-sidebar-overlay.active {
+            display: block;
         }
     </style>
 </head>
-<body class="bg-slate-100 text-slate-900">
-    <div id="mobileSidebarOverlay" class="fixed inset-0 z-40 hidden md:hidden mobile-overlay" onclick="toggleMobileSidebar()"></div>
+<body class="bg-gray-100">
+    <div id="mobileSidebarOverlay" class="mobile-sidebar-overlay" onclick="toggleMobileSidebar()"></div>
 
-    <div class="min-h-screen md:flex">
-        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 hidden w-72 flex-col border-r border-slate-200 bg-white shadow-xl md:flex md:relative md:z-auto md:translate-x-0">
-            <div class="flex h-full flex-col">
-                <div class="border-b border-slate-100 px-6 py-6">
-                    <div class="flex items-center gap-3">
-                        <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-600 text-white shadow-sm">
-                            <span class="text-2xl">🌾</span>
-                        </div>
-                        <div>
-                            <h2 class="text-lg font-bold text-emerald-700">MannalonApp</h2>
-                            <p class="text-xs text-slate-500">Farmer Portal</p>
-                        </div>
+    <div class="flex h-screen overflow-hidden bg-gray-100">
+        <aside id="sidebar" class="w-64 bg-white text-gray-800 flex-shrink-0 hidden md:block shadow-xl border-r-2 border-emerald-500 fixed md:relative h-full top-0 left-0 z-40 md:z-0 overflow-y-auto">
+            <div class="p-6 bg-gradient-to-r from-emerald-600 to-emerald-700">
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center">
+                        <span class="text-2xl">🌾</span>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-white">MannalonApp</h2>
+                        <p class="text-xs text-emerald-100">Farmer Portal</p>
                     </div>
                 </div>
+                <div class="mt-3 bg-white/20 rounded-lg px-3 py-2">
+                    <p class="text-xs text-emerald-100">Welcome back</p>
+                    <p class="text-sm font-semibold text-white">{{ auth()->user()->name ?? 'Farmer' }}</p>
+                </div>
+            </div>
 
-                <nav class="flex-1 space-y-1 px-4 py-4">
-                    <a href="{{ route('farmer.home') }}" class="sidebar-link flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium {{ request()->routeIs('farmer.home') ? 'active' : 'text-slate-700' }}">
-                        <i class="fas fa-home w-5 text-center"></i>
-                        <span>Home</span>
-                    </a>
-                    <a href="{{ route('farmer.announcements') }}" class="sidebar-link flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium {{ request()->routeIs('farmer.announcements') ? 'active' : 'text-slate-700' }}">
-                        <i class="fas fa-bullhorn w-5 text-center"></i>
-                        <span>Announcements</span>
-                    </a>
-                    <a href="{{ route('farmer.guides') }}" class="sidebar-link flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium {{ request()->routeIs('farmer.guides') ? 'active' : 'text-slate-700' }}">
-                        <i class="fas fa-book w-5 text-center"></i>
-                        <span>Farming Guides</span>
-                    </a>
-                    <a href="{{ route('farmer.weather') }}" class="sidebar-link flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium {{ request()->routeIs('farmer.weather') ? 'active' : 'text-slate-700' }}">
-                        <i class="fas fa-cloud-sun w-5 text-center"></i>
-                        <span>Weather Info</span>
-                    </a>
-                    <a href="{{ route('farmer.market-prices') }}" class="sidebar-link flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium {{ request()->routeIs('farmer.market-prices') ? 'active' : 'text-slate-700' }}">
-                        <i class="fas fa-chart-line w-5 text-center"></i>
-                        <span>Market Prices</span>
-                    </a>
-                    <a href="{{ route('farmer.information') }}" class="sidebar-link flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium {{ request()->routeIs('farmer.information') ? 'active' : 'text-slate-700' }}">
-                        <i class="fas fa-folder-open w-5 text-center"></i>
-                        <span>My Farm Information</span>
-                    </a>
-                    <a href="{{ route('farmer.about') }}" class="sidebar-link flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium {{ request()->routeIs('farmer.about') ? 'active' : 'text-slate-700' }}">
-                        <i class="fas fa-circle-info w-5 text-center"></i>
-                        <span>About MannalonApp</span>
-                    </a>
-                    <a href="{{ route('farmer.profile') }}" class="sidebar-link flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium {{ request()->routeIs('farmer.profile') ? 'active' : 'text-slate-700' }}">
-                        <i class="fas fa-user w-5 text-center"></i>
-                        <span>Profile</span>
-                    </a>
-                </nav>
+            <nav class="p-4 space-y-2 overflow-y-auto" style="max-height: calc(100vh - 180px);">
+                <a href="{{ route('farmer.home') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-lg {{ request()->routeIs('farmer.home') ? 'active' : '' }}">
+                    <i class="fas fa-home w-5"></i>
+                    <span>Home</span>
+                </a>
+                <a href="{{ route('farmer.announcements') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-lg {{ request()->routeIs('farmer.announcements') ? 'active' : '' }}">
+                    <i class="fas fa-bullhorn w-5"></i>
+                    <span>Announcements</span>
+                </a>
+                <a href="{{ route('farmer.guides') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-lg {{ request()->routeIs('farmer.guides') ? 'active' : '' }}">
+                    <i class="fas fa-book w-5"></i>
+                    <span>Farming Guides</span>
+                </a>
+                <a href="{{ route('farmer.weather') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-lg {{ request()->routeIs('farmer.weather') ? 'active' : '' }}">
+                    <i class="fas fa-cloud-sun w-5"></i>
+                    <span>Weather Info</span>
+                </a>
+                <a href="{{ route('farmer.market-prices') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-lg {{ request()->routeIs('farmer.market-prices') ? 'active' : '' }}">
+                    <i class="fas fa-chart-line w-5"></i>
+                    <span>Market Prices</span>
+                </a>
+                <a href="{{ route('farmer.information') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-lg {{ request()->routeIs('farmer.information') ? 'active' : '' }}">
+                    <i class="fas fa-folder-open w-5"></i>
+                    <span>My Farm Information</span>
+                </a>
+                <a href="{{ route('farmer.about') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-lg {{ request()->routeIs('farmer.about') ? 'active' : '' }}">
+                    <i class="fas fa-circle-info w-5"></i>
+                    <span>About MannalonApp</span>
+                </a>
+                <a href="{{ route('farmer.profile') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-lg {{ request()->routeIs('farmer.profile') ? 'active' : '' }}">
+                    <i class="fas fa-user w-5"></i>
+                    <span>Profile</span>
+                </a>
 
-                <div class="border-t border-slate-100 px-4 py-4">
+                <div class="pt-4 mt-4 border-t border-gray-200">
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
-                        <button type="submit" class="sidebar-link flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-700">
-                            <i class="fas fa-right-from-bracket w-5 text-center"></i>
+                        <button type="submit" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-lg w-full text-left text-red-600 hover:bg-red-50">
+                            <i class="fas fa-sign-out-alt w-5"></i>
                             <span>Logout</span>
                         </button>
                     </form>
                 </div>
-            </div>
+            </nav>
         </aside>
 
-        <div class="flex min-h-screen flex-1 flex-col md:ml-0">
+        <div class="flex-1 flex flex-col overflow-hidden">
             <header class="sticky top-0 z-30 border-b border-slate-200 bg-white/95 shadow-sm backdrop-blur">
                 <div class="flex items-center justify-between gap-4 px-4 py-4 md:px-6">
                     <div class="flex items-center gap-3 min-w-0">
@@ -180,21 +191,17 @@
         function toggleMobileSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('mobileSidebarOverlay');
-
+            sidebar.classList.toggle('!block');
             sidebar.classList.toggle('hidden');
-            overlay.classList.toggle('hidden');
-
-            document.body.style.overflow = overlay.classList.contains('hidden') ? '' : 'hidden';
+            overlay.classList.toggle('active');
+            document.body.style.overflow = overlay.classList.contains('active') ? 'hidden' : 'auto';
         }
 
-        document.querySelectorAll('.sidebar-link').forEach((link) => {
+        // Close sidebar when clicking on a link
+        document.querySelectorAll('.sidebar-link').forEach(link => {
             link.addEventListener('click', () => {
                 if (window.innerWidth < 768) {
-                    const sidebar = document.getElementById('sidebar');
-                    const overlay = document.getElementById('mobileSidebarOverlay');
-                    sidebar.classList.add('hidden');
-                    overlay.classList.add('hidden');
-                    document.body.style.overflow = '';
+                    toggleMobileSidebar();
                 }
             });
         });
@@ -345,45 +352,6 @@
             if (typingIndicator) {
                 typingIndicator.remove();
             }
-        }
-    </script>
-</body>
-
-        // Show Typing Indicator
-        function showTypingIndicator() {
-            const chatMessages = document.getElementById('chatMessages');
-            const typingDiv = document.createElement('div');
-            typingDiv.id = 'typingIndicator';
-            typingDiv.className = 'flex gap-3';
-            typingDiv.innerHTML = `
-                <div class="w-8 h-8 bg-emerald-600 rounded-full flex items-center justify-center flex-shrink-0">
-                    <span class="text-white">🤖</span>
-                </div>
-                <div class="bg-white rounded-lg rounded-tl-none p-3 shadow-sm">
-                    <div class="flex gap-1">
-                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
-                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
-                    </div>
-                </div>
-            `;
-            chatMessages.appendChild(typingDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        // Hide Typing Indicator
-        function hideTypingIndicator() {
-            const typingIndicator = document.getElementById('typingIndicator');
-            if (typingIndicator) {
-                typingIndicator.remove();
-            }
-        }
-
-        // Escape HTML to prevent XSS
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
         }
 
         // Allow Enter key to send, Shift+Enter for new line

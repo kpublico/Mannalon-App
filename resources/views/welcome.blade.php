@@ -29,15 +29,11 @@
         .service-card {
             transition: all 0.3s ease;
             border: 2px solid #e5e7eb;
+            min-height: 320px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
-            .service-card {
-                transition: all 0.3s ease;
-                border: 2px solid #e5e7eb;
-                min-height: 320px;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-            }
         .service-card:hover {
             border-color: #064e3b;
             box-shadow: 0 8px 20px rgba(6, 78, 59, 0.1);
@@ -180,33 +176,33 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
                 <!-- Service 1 -->
-                    <div class="service-card bg-white rounded-xl p-5 md:p-6 lg:p-8 shadow-sm hover:shadow-lg">
-                        <div class="text-3xl md:text-4xl mb-3 md:mb-4">📢</div>
-                        <h3 class="text-lg md:text-xl lg:text-2xl font-bold text-gray-900 mb-2 md:mb-3">Announcements</h3>
-                        <p class="text-sm md:text-base text-gray-600 mb-4 line-clamp-3 min-h-[60px]">
+                <div class="service-card bg-white rounded-xl p-5 md:p-6 lg:p-8 shadow-sm hover:shadow-lg">
+                    <div class="text-3xl md:text-4xl mb-3 md:mb-4">📢</div>
+                    <h3 class="text-lg md:text-xl lg:text-2xl font-bold text-gray-900 mb-2 md:mb-3">Announcements</h3>
+                    <p class="text-sm md:text-base text-gray-600 mb-4 line-clamp-3 min-h-[60px]">
                         Receive timely updates from admins and stay informed about important farming announcements, policies, and events in your area.
                     </p>
-                        <button class="text-emerald-700 font-semibold hover:text-emerald-800 text-sm md:text-base transition mt-auto">Learn More →</button>
+                    <button class="text-emerald-700 font-semibold hover:text-emerald-800 text-sm md:text-base transition mt-auto">Learn More →</button>
                 </div>
 
                 <!-- Service 2 -->
-                    <div class="service-card bg-white rounded-xl p-5 md:p-6 lg:p-8 shadow-sm hover:shadow-lg">
-                        <div class="text-3xl md:text-4xl mb-3 md:mb-4">📚</div>
-                        <h3 class="text-lg md:text-xl lg:text-2xl font-bold text-gray-900 mb-2 md:mb-3">Farming Guides</h3>
-                        <p class="text-sm md:text-base text-gray-600 mb-4 line-clamp-3 min-h-[60px]">
+                <div class="service-card bg-white rounded-xl p-5 md:p-6 lg:p-8 shadow-sm hover:shadow-lg">
+                    <div class="text-3xl md:text-4xl mb-3 md:mb-4">📚</div>
+                    <h3 class="text-lg md:text-xl lg:text-2xl font-bold text-gray-900 mb-2 md:mb-3">Farming Guides</h3>
+                    <p class="text-sm md:text-base text-gray-600 mb-4 line-clamp-3 min-h-[60px]">
                         Access comprehensive farming guides with best practices, techniques, and expert tips to improve your crop and livestock management.
                     </p>
-                        <button class="text-emerald-700 font-semibold hover:text-emerald-800 text-sm md:text-base transition mt-auto">Learn More →</button>
+                    <button class="text-emerald-700 font-semibold hover:text-emerald-800 text-sm md:text-base transition mt-auto">Learn More →</button>
                 </div>
 
                 <!-- Service 3 -->
-                    <div class="service-card bg-white rounded-xl p-5 md:p-6 lg:p-8 shadow-sm hover:shadow-lg">
-                        <div class="text-3xl md:text-4xl mb-3 md:mb-4">🌤️</div>
-                        <h3 class="text-lg md:text-xl lg:text-2xl font-bold text-gray-900 mb-2 md:mb-3">Weather Monitoring</h3>
-                        <p class="text-sm md:text-base text-gray-600 mb-4 line-clamp-3 min-h-[60px]">
+                <div class="service-card bg-white rounded-xl p-5 md:p-6 lg:p-8 shadow-sm hover:shadow-lg">
+                    <div class="text-3xl md:text-4xl mb-3 md:mb-4">🌤️</div>
+                    <h3 class="text-lg md:text-xl lg:text-2xl font-bold text-gray-900 mb-2 md:mb-3">Weather Monitoring</h3>
+                    <p class="text-sm md:text-base text-gray-600 mb-4 line-clamp-3 min-h-[60px]">
                         Track real-time weather data and forecasts customized for your location to make informed farming decisions.
                     </p>
-                        <button class="text-emerald-700 font-semibold hover:text-emerald-800 text-sm md:text-base transition mt-auto">Learn More →</button>
+                    <button class="text-emerald-700 font-semibold hover:text-emerald-800 text-sm md:text-base transition mt-auto">Learn More →</button>
                 </div>
 
                 <!-- Service 4 -->
@@ -317,8 +313,8 @@
 
                     <!-- Quick Links -->
                     <div>
-                        <h3 class="text-xl font-bold mb-4">Quick Links</h3>
-                        <ul class="space-y-2 text-emerald-100">
+                        <h3 class="text-lg md:text-xl font-bold mb-3 md:mb-4">Quick Links</h3>
+                        <ul class="space-y-1.5 md:space-y-2 text-emerald-100 text-sm md:text-base">
                             <li><a href="#" class="hover:text-white transition">Dashboard</a></li>
                             <li><a href="#" class="hover:text-white transition">Features</a></li>
                             <li><a href="#" class="hover:text-white transition">Pricing</a></li>
@@ -328,8 +324,8 @@
 
                     <!-- Services -->
                     <div>
-                        <h3 class="text-xl font-bold mb-4">Services</h3>
-                        <ul class="space-y-2 text-emerald-100">
+                        <h3 class="text-lg md:text-xl font-bold mb-3 md:mb-4">Services</h3>
+                        <ul class="space-y-1.5 md:space-y-2 text-emerald-100 text-sm md:text-base">
                             <li><a href="#" class="hover:text-white transition">Farm Monitoring</a></li>
                             <li><a href="#" class="hover:text-white transition">Market Insights</a></li>
                             <li><a href="#" class="hover:text-white transition">Weather Alerts</a></li>
@@ -339,22 +335,22 @@
 
                     <!-- Contact Info -->
                     <div>
-                        <h3 class="text-xl font-bold mb-4">Contact Info</h3>
-                        <ul class="space-y-3 text-emerald-100">
-                            <li class="flex items-center gap-2">
+                        <h3 class="text-lg md:text-xl font-bold mb-3 md:mb-4">Contact Info</h3>
+                        <ul class="space-y-3 text-emerald-100 text-sm md:text-base">
+                            <li class="flex items-center gap-2 md:gap-3">
                                 <svg style="width: 20px; height: 20px; flex-shrink-0;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
                                 </svg>
                                 <span>+1 (555) 123-4567</span>
                             </li>
-                            <li class="flex items-center gap-2">
+                            <li class="flex items-center gap-2 md:gap-3">
                                 <svg style="width: 20px; height: 20px; flex-shrink-0;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <rect x="2" y="4" width="20" height="16" rx="2"/>
                                     <path d="m22 7-10 5L2 7"/>
                                 </svg>
                                 <span>support@mannalon.com</span>
                             </li>
-                            <li class="flex items-center gap-2">
+                            <li class="flex items-center gap-2 md:gap-3">
                                 <svg style="width: 20px; height: 20px; flex-shrink-0;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
                                     <circle cx="12" cy="10" r="3"/>

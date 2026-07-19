@@ -125,5 +125,106 @@
             </ul>
         </section>
     </div>
+
+    <!-- Farmer Selector & Details Section -->
+    <div class="bg-white rounded-xl shadow-md border border-emerald-200 p-6">
+        <div class="space-y-4">
+            <label class="block text-lg font-semibold text-gray-700">
+                <i class="fas fa-users mr-2 text-emerald-600"></i>View Specific Farmer Details
+            </label>
+
+            <div class="flex gap-3 items-end flex-wrap">
+                <div class="flex-1 min-w-xs">
+                    <select id="dashboard_farmer_id" onchange="loadDashboardFarmer();" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent font-medium">
+                        <option value="">-- Choose a Farmer --</option>
+                        <?php if(isset($allFarmers)): ?>
+                            <?php $__currentLoopData = $allFarmers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $f): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($f->id); ?>">
+                                    #<?php echo e($f->id); ?> - <?php echo e($f->first_name); ?> <?php echo e($f->last_name); ?> (<?php echo e($f->municipality_city ?? 'N/A'); ?>)
+                                </option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        <?php endif; ?>
+                    </select>
+                </div>
+            </div>
+
+            <?php if(isset($selectedDashboardFarmer) && $selectedDashboardFarmer): ?>
+                <!-- Selected Farmer Details -->
+                <div class="mt-6 p-4 bg-emerald-50 border border-emerald-200 rounded-lg">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+                        <div>
+                            <p class="text-gray-600 font-semibold">Full Name</p>
+                            <p class="text-gray-900 font-medium mt-1"><?php echo e($selectedDashboardFarmer->first_name); ?> <?php echo e($selectedDashboardFarmer->last_name); ?></p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600 font-semibold">Email</p>
+                            <p class="text-gray-900 font-medium mt-1"><?php echo e($selectedDashboardFarmer->email ?? 'N/A'); ?></p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600 font-semibold">Phone</p>
+                            <p class="text-gray-900 font-medium mt-1"><?php echo e($selectedDashboardFarmer->phone ?? 'N/A'); ?></p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600 font-semibold">Location</p>
+                            <p class="text-gray-900 font-medium mt-1"><?php echo e($selectedDashboardFarmer->municipality_city ?? 'N/A'); ?>, <?php echo e($selectedDashboardFarmer->province ?? 'N/A'); ?></p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600 font-semibold">Farmer Type</p>
+                            <p class="text-gray-900 font-medium mt-1"><?php echo e(ucfirst(str_replace('_', ' ', $selectedDashboardFarmer->farmer_type ?? 'N/A'))); ?></p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600 font-semibold">Farm Size</p>
+                            <p class="text-gray-900 font-medium mt-1"><?php echo e($selectedDashboardFarmer->farm_size_hectares ?? 'N/A'); ?> ha</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600 font-semibold">Years Farming</p>
+                            <p class="text-gray-900 font-medium mt-1"><?php echo e($selectedDashboardFarmer->years_in_farming ?? 'N/A'); ?> years</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600 font-semibold">Status</p>
+                            <p class="mt-1">
+                                <?php if($selectedDashboardFarmer->profile_status === 'active'): ?>
+                                    <span class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-medium"><i class="fas fa-check-circle"></i> Active</span>
+                                <?php else: ?>
+                                    <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-medium"><i class="fas fa-times-circle"></i> Inactive</span>
+                                <?php endif; ?>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="flex gap-3 mt-4 pt-4 border-t border-emerald-200">
+                        <button type="button" onclick="openDashboardEditModal(<?php echo e($selectedDashboardFarmer->id); ?>)" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition font-medium text-sm">
+                            <i class="fas fa-edit mr-2"></i>Edit
+                        </button>
+                        <button type="button" onclick="confirmDelete(<?php echo e($selectedDashboardFarmer->id); ?>, '<?php echo e($selectedDashboardFarmer->first_name); ?> <?php echo e($selectedDashboardFarmer->last_name); ?>')" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-medium text-sm">
+                            <i class="fas fa-trash mr-2"></i>Delete
+                        </button>
+                        <button type="button" onclick="loadAdminPage('farmer-info-dashboard', '<?php echo e(route('admin.farmer-info-dashboard')); ?>?farmer_id=<?php echo e($selectedDashboardFarmer->id); ?>')" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium text-sm">
+                            <i class="fas fa-eye mr-2"></i>View Full Details
+                        </button>
+                    </div>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
 </div>
+
+<script>
+    function loadDashboardFarmer() {
+        const farmerId = document.getElementById('dashboard_farmer_id').value;
+        if (farmerId) {
+            if (typeof loadAdminPage === 'function') {
+                loadAdminPage('dashboard', '<?php echo e(route('admin.dashboard')); ?>?selected_farmer=' + farmerId);
+            } else {
+                window.location.href = '<?php echo e(route('admin.dashboard')); ?>?selected_farmer=' + farmerId;
+            }
+        }
+    }
+
+    function openDashboardEditModal(farmerId) {
+        // Redirect to edit page
+        window.location.href = '/admin/farmers/' + farmerId + '/edit';
+    }
+</script>
 <?php /**PATH C:\xampp\htdocs\Mannalon_App\resources\views/admin/dashboard-content.blade.php ENDPATH**/ ?>

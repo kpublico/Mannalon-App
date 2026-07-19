@@ -155,7 +155,9 @@ class User extends Authenticatable
      */
     public function messages()
     {
-        return $this->sentMessages()->union($this->receivedMessages());
+        return Message::query()
+            ->where('sender_id', $this->id)
+            ->orWhere('recipient_id', $this->id);
     }
 
     /**

@@ -125,7 +125,7 @@
                             <td class="px-4 py-3 text-gray-900 font-semibold">{{ $announcement->title }}</td>
                             <td class="px-4 py-3"><span class="px-2 py-1 text-xs rounded-full bg-emerald-100 text-emerald-800">{{ $announcement->category }}</span></td>
                             <td class="px-4 py-3 text-gray-600">{{ $announcement->created_at->format('M d, Y') }}</td>
-                            <td class="px-4 py-3 text-gray-600">{{ $announcement->expiry_date ? $announcement->expiry_date->format('M d, Y') : 'N/A' }}</td>
+                            <td class="px-4 py-3 text-gray-600">{{ $announcement->expiry_date ? \Illuminate\Support\Carbon::parse($announcement->expiry_date)->format('M d, Y') : 'N/A' }}</td>
                             <td class="px-4 py-3">
                                 <div class="flex justify-center gap-2">
                                     <a href="{{ route('admin.announcements.edit', $announcement->id) }}" class="px-3 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700">Edit</a>
