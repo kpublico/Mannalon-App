@@ -96,7 +96,7 @@ return new class extends Migration
             $table->timestamps();
             
             // Unique constraint
-            $table->unique(['sender_role', 'recipient_role', 'communication_method']);
+            $table->unique(['sender_role', 'recipient_role', 'communication_method'], 'comm_permissions_unique');
         });
 
         // Conversation Threads - Group related messages

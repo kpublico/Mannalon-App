@@ -12,20 +12,33 @@ return new class extends Migration
     public function up(): void
     {
         // 1. Extended Farmer Personal Information Table
-        Schema::create('farmer_profiles', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->unique()->constrained('users')->onDelete('cascade');
-            $table->string('full_name', 150);
-            $table->enum('gender', ['male', 'female', 'other'])->nullable();
-            $table->date('date_of_birth')->nullable();
-            $table->integer('age')->nullable();
-            $table->enum('civil_status', ['single', 'married', 'divorced', 'widowed'])->nullable();
-            $table->string('contact_number', 20)->nullable();
-            $table->string('government_id_type', 50)->nullable(); // PhilSys ID, Voter's ID, etc.
-            $table->string('government_id_number', 100)->nullable();
-            $table->timestamps();
-            $table->index('user_id');
-        });
+        if (!Schema::hasTable('farmer_profiles')) {
+            Schema::create('farmer_profiles', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('user_id')->unique()->constrained('users')->onDelete('cascade');
+                $table->string('full_name', 150);
+                $table->enum('gender', ['male', 'female', 'other'])->nullable();
+                $table->date('date_of_birth')->nullable();
+                $table->integer('age')->nullable();
+                $table->enum('civil_status', ['single', 'married', 'divorced', 'widowed'])->nullable();
+                $table->string('contact_number', 20)->nullable();
+                $table->string('government_id_type', 50)->nullable();
+                $table->string('government_id_number', 100)->nullable();
+                $table->timestamps();
+                $table->index('user_id');
+            });
+        } else {
+            Schema::table('farmer_profiles', function (Blueprint $table) {
+                $table->string('full_name', 150)->nullable();
+                $table->enum('gender', ['male', 'female', 'other'])->nullable();
+                $table->date('date_of_birth')->nullable();
+                $table->integer('age')->nullable();
+                $table->enum('civil_status', ['single', 'married', 'divorced', 'widowed'])->nullable();
+                $table->string('contact_number', 20)->nullable();
+                $table->string('government_id_type', 50)->nullable();
+                $table->string('government_id_number', 100)->nullable();
+            });
+        }
 
         // 2. Address Information Table
         Schema::create('farmer_addresses', function (Blueprint $table) {
