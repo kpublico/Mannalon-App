@@ -16,7 +16,8 @@ return new class extends Migration
     public function up(): void
     {
         // Messages table - Core messaging between roles
-        Schema::create('messages', function (Blueprint $table) {
+        if (!Schema::hasTable('messages')) {
+            Schema::create('messages', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('sender_id');
             $table->unsignedBigInteger('recipient_id')->nullable(); // Null for broadcast messages
@@ -46,10 +47,12 @@ return new class extends Migration
             $table->foreign('sender_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('recipient_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('target_group_id')->references('id')->on('farmer_groups')->onDelete('set null');
-        });
+            });
+        }
 
         // Notifications table - Track which users have been notified
-        Schema::create('notifications', function (Blueprint $table) {
+        if (!Schema::hasTable('notifications')) {
+            Schema::create('notifications', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('message_id');
@@ -63,10 +66,12 @@ return new class extends Migration
             // Foreign keys
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('message_id')->references('id')->on('messages')->onDelete('cascade');
-        });
+            });
+        }
 
         // Message Recipients - For messages sent to multiple users
-        Schema::create('message_recipients', function (Blueprint $table) {
+        if (!Schema::hasTable('message_recipients')) {
+            Schema::create('message_recipients', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('message_id');
             $table->unsignedBigInteger('recipient_id');
@@ -82,10 +87,12 @@ return new class extends Migration
             
             // Unique constraint - prevent duplicates
             $table->unique(['message_id', 'recipient_id']);
-        });
+            });
+        }
 
         // Communication Permissions - Define which roles can communicate with which roles
-        Schema::create('communication_permissions', function (Blueprint $table) {
+        if (!Schema::hasTable('communication_permissions')) {
+            Schema::create('communication_permissions', function (Blueprint $table) {
             $table->id();
             $table->string('sender_role'); // Role that sends messages
             $table->string('recipient_role'); // Role that receives messages
@@ -97,10 +104,12 @@ return new class extends Migration
             
             // Unique constraint
             $table->unique(['sender_role', 'recipient_role', 'communication_method'], 'comm_permissions_unique');
-        });
+            });
+        }
 
         // Conversation Threads - Group related messages
-        Schema::create('conversation_threads', function (Blueprint $table) {
+        if (!Schema::hasTable('conversation_threads')) {
+            Schema::create('conversation_threads', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('initiator_id');
             $table->string('title');
@@ -115,10 +124,12 @@ return new class extends Migration
             // Foreign keys
             $table->foreign('initiator_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('last_message_id')->references('id')->on('messages')->onDelete('set null');
-        });
+            });
+        }
 
         // Thread Participants - Track who's in each conversation
-        Schema::create('thread_participants', function (Blueprint $table) {
+        if (!Schema::hasTable('thread_participants')) {
+            Schema::create('thread_participants', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('thread_id');
             $table->unsignedBigInteger('user_id');
@@ -133,7 +144,8 @@ return new class extends Migration
             
             // Unique constraint
             $table->unique(['thread_id', 'user_id']);
-        });
+            });
+        }
     }
 
     /**

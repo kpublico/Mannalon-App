@@ -128,7 +128,7 @@ return new class extends Migration
 
         $table = 'communication_permissions';
         foreach ($permissions as $permission) {
-            \DB::table($table)->insert(array_merge($permission, [
+            \Illuminate\Support\Facades\DB::table($table)->insert(array_merge($permission, [
                 'created_at' => now(),
                 'updated_at' => now(),
             ]));
@@ -141,6 +141,6 @@ return new class extends Migration
     public function down(): void
     {
         // Just delete all permissions if we need to roll back
-        \DB::table('communication_permissions')->truncate();
+        \Illuminate\Support\Facades\DB::table('communication_permissions')->truncate();
     }
 };

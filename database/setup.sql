@@ -184,7 +184,7 @@ CREATE TABLE `communication_permissions` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -193,7 +193,44 @@ CREATE TABLE `communication_permissions` (
 
 LOCK TABLES `communication_permissions` WRITE;
 /*!40000 ALTER TABLE `communication_permissions` DISABLE KEYS */;
+INSERT INTO `communication_permissions` VALUES (1,'farmer','admin',1,'direct','Farmer can send direct messages to admin',NULL,'2026-09-12 20:00:17','2026-09-12 20:00:17'),(2,'farmer','coordinator',1,'direct','Farmer can send direct messages to coordinator',NULL,'2026-09-12 20:00:17','2026-09-12 20:00:17'),(3,'farmer','farmer',1,'direct','Farmers can communicate with each other',NULL,'2026-09-12 20:00:17','2026-09-12 20:00:17'),(4,'admin','farmer',1,'direct','Admin can send direct messages to farmer',NULL,'2026-09-12 20:00:17','2026-09-12 20:00:17'),(5,'admin','farmer',1,'broadcast','Admin can broadcast announcements to farmers',NULL,'2026-09-12 20:00:17','2026-09-12 20:00:17'),(6,'admin','admin',1,'direct','Admins can communicate with each other',NULL,'2026-09-12 20:00:17','2026-09-12 20:00:17'),(7,'admin','super_admin',1,'direct','Admin can report to super admin',NULL,'2026-09-12 20:00:17','2026-09-12 20:00:17'),(8,'admin','coordinator',1,'direct','Admin can coordinate with coordinator',NULL,'2026-09-12 20:00:17','2026-09-12 20:00:17'),(9,'super_admin','admin',1,'direct','Super admin can send directives to admin',NULL,'2026-09-12 20:00:17','2026-09-12 20:00:17'),(10,'super_admin','admin',1,'broadcast','Super admin can broadcast to all admins',NULL,'2026-09-12 20:00:17','2026-09-12 20:00:17'),(11,'super_admin','super_admin',1,'direct','Super admins can communicate with each other',NULL,'2026-09-12 20:00:17','2026-09-12 20:00:17'),(12,'super_admin','farmer',1,'announcement','Super admin can send system announcements to farmers',NULL,'2026-09-12 20:00:17','2026-09-12 20:00:17'),(13,'coordinator','farmer',1,'direct','Coordinator can assist farmers',NULL,'2026-09-12 20:00:17','2026-09-12 20:00:17'),(14,'coordinator','admin',1,'direct','Coordinator can report to admin',NULL,'2026-09-12 20:00:17','2026-09-12 20:00:17'),(15,'coordinator','coordinator',1,'direct','Coordinators can share information',NULL,'2026-09-12 20:00:17','2026-09-12 20:00:17');
 /*!40000 ALTER TABLE `communication_permissions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `conversation_threads`
+--
+
+DROP TABLE IF EXISTS `conversation_threads`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `conversation_threads` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `initiator_id` bigint(20) unsigned NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `last_message_id` bigint(20) unsigned DEFAULT NULL,
+  `last_activity_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `is_closed` tinyint(1) NOT NULL DEFAULT 0,
+  `closed_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `conversation_threads_initiator_id_foreign` (`initiator_id`),
+  KEY `conversation_threads_last_message_id_foreign` (`last_message_id`),
+  CONSTRAINT `conversation_threads_initiator_id_foreign` FOREIGN KEY (`initiator_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `conversation_threads_last_message_id_foreign` FOREIGN KEY (`last_message_id`) REFERENCES `messages` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `conversation_threads`
+--
+
+LOCK TABLES `conversation_threads` WRITE;
+/*!40000 ALTER TABLE `conversation_threads` DISABLE KEYS */;
+/*!40000 ALTER TABLE `conversation_threads` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1096,7 +1133,7 @@ CREATE TABLE `migrations` (
   `migration` varchar(255) NOT NULL,
   `batch` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1105,7 +1142,7 @@ CREATE TABLE `migrations` (
 
 LOCK TABLES `migrations` WRITE;
 /*!40000 ALTER TABLE `migrations` DISABLE KEYS */;
-INSERT INTO `migrations` VALUES (1,'2024_01_01_000001_create_users_table',1),(2,'2024_01_01_000002_create_crops_table',1),(3,'2024_01_01_000003_create_livestock_table',1),(4,'2026_01_27_000001_add_address_fields_to_users_table',1),(5,'2026_03_24_000001_create_farmers_table',1),(6,'2026_03_24_000002_create_farm_details_table',1),(7,'2026_03_24_000003_create_beneficiaries_table',1),(8,'2026_03_24_000004_create_service_access_logs_table',1),(9,'2026_03_24_000005_create_announcements_table',1),(10,'2026_03_24_000006_create_farming_guides_table',1),(11,'2026_03_24_000007_create_commodity_prices_table',1),(12,'2026_03_24_000008_add_coordinator_role_to_users_table',1),(13,'2026_03_25_000101_create_roles_table',1),(14,'2026_03_25_000102_update_users_for_role_hierarchy',1),(15,'2026_03_25_000103_create_admin_supervisor_assignments_table',1),(16,'2026_03_25_000104_create_farmer_groups_table',1),(17,'2026_03_25_000105_create_farmer_profiles_table',1),(18,'2026_03_25_000106_create_crop_reports_table',1),(19,'2026_03_25_000107_update_announcements_for_targeting',1),(20,'2026_03_25_140000_add_resource_url_to_farming_guides',2),(21,'2026_03_25_150000_add_pdf_file_to_farming_guides',3),(22,'2026_03_25_120000_add_comprehensive_fields_to_farmers_table',4),(23,'2026_03_30_000001_add_land_boundary_points_to_farmers_table',5),(24,'2026_03_25_000201_create_comprehensive_farmer_profile_tables',6);
+INSERT INTO `migrations` VALUES (1,'2024_01_01_000001_create_users_table',1),(2,'2024_01_01_000002_create_crops_table',1),(3,'2024_01_01_000003_create_livestock_table',1),(4,'2026_01_27_000001_add_address_fields_to_users_table',1),(5,'2026_03_24_000001_create_farmers_table',1),(6,'2026_03_24_000002_create_farm_details_table',1),(7,'2026_03_24_000003_create_beneficiaries_table',1),(8,'2026_03_24_000004_create_service_access_logs_table',1),(9,'2026_03_24_000005_create_announcements_table',1),(10,'2026_03_24_000006_create_farming_guides_table',1),(11,'2026_03_24_000007_create_commodity_prices_table',1),(12,'2026_03_24_000008_add_coordinator_role_to_users_table',1),(13,'2026_03_25_000101_create_roles_table',1),(14,'2026_03_25_000102_update_users_for_role_hierarchy',1),(15,'2026_03_25_000103_create_admin_supervisor_assignments_table',1),(16,'2026_03_25_000104_create_farmer_groups_table',1),(17,'2026_03_25_000105_create_farmer_profiles_table',1),(18,'2026_03_25_000106_create_crop_reports_table',1),(19,'2026_03_25_000107_update_announcements_for_targeting',1),(20,'2026_03_25_140000_add_resource_url_to_farming_guides',2),(21,'2026_03_25_150000_add_pdf_file_to_farming_guides',3),(22,'2026_03_25_120000_add_comprehensive_fields_to_farmers_table',4),(23,'2026_03_30_000001_add_land_boundary_points_to_farmers_table',5),(24,'2026_03_25_000201_create_comprehensive_farmer_profile_tables',6),(25,'2026_03_25_130000_create_messages_system_tables',7),(26,'2026_03_25_130100_seed_communication_permissions',8);
 /*!40000 ALTER TABLE `migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1240,6 +1277,39 @@ LOCK TABLES `service_access_logs` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `thread_participants`
+--
+
+DROP TABLE IF EXISTS `thread_participants`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `thread_participants` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `thread_id` bigint(20) unsigned NOT NULL,
+  `user_id` bigint(20) unsigned NOT NULL,
+  `is_muted` tinyint(1) NOT NULL DEFAULT 0,
+  `muted_until` timestamp NULL DEFAULT NULL,
+  `participant_role` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `thread_participants_thread_id_user_id_unique` (`thread_id`,`user_id`),
+  KEY `thread_participants_user_id_foreign` (`user_id`),
+  CONSTRAINT `thread_participants_thread_id_foreign` FOREIGN KEY (`thread_id`) REFERENCES `conversation_threads` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `thread_participants_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `thread_participants`
+--
+
+LOCK TABLES `thread_participants` WRITE;
+/*!40000 ALTER TABLE `thread_participants` DISABLE KEYS */;
+/*!40000 ALTER TABLE `thread_participants` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `users`
 --
 
@@ -1295,4 +1365,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-09-13 11:37:05
+-- Dump completed on 2026-09-13 12:00:23
